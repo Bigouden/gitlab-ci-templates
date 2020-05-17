@@ -33,7 +33,7 @@ Build:
     
 Dive:
   stage: Inspect
-    before_script:
+  before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker pull $CONTAINER_TEST_IMAGE
