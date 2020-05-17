@@ -9,6 +9,7 @@ services:
 stages:
   - Quality
   - Build
+  - Inspect
   - Release
   
 variables:
@@ -29,6 +30,14 @@ Build:
   script:
     - docker build --pull -t $CONTAINER_TEST_IMAGE .
     - docker push $CONTAINER_TEST_IMAGE
+    
+Dive:
+  stage: Inspect
+    before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker pull $CONTAINER_TEST_IMAGE
+    - docker run -v /var/run/docker.sock:/var/run/docker.sock:ro wagoodman/dive $CONTAINER_TEST_IMAGE --ci
 
 Release:
   stage: Release
