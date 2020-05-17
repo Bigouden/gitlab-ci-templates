@@ -1,0 +1,46 @@
+workflow:
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+
+image: docker:latest
+services:
+  - docker:dind
+
+stages:
+  - Quality
+  - Build
+  - Release
+  
+variables:
+  CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:test
+  CONTAINER_VERSION_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  CONTAINER_LATEST_IMAGE: $CI_REGISTRY_IMAGE:latest
+
+Hadolint:
+  stage: Quality
+  image: hadolint/hadolint:latest-debian
+  script:
+    - hadolint --ignore DL3013 --ignore DL3018 Dockerfile
+
+Build:
+  stage: Build
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker build --pull -t $CONTAINER_TEST_IMAGE .
+    - docker push $CONTAINER_TEST_IMAGE
+
+Release:
+  stage: Release
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker pull $CONTAINER_TEST_IMAGE
+    - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_VERSION_IMAGE
+    - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_LATEST_IMAGE
+    - docker push $CONTAINER_VERSION_IMAGE
+    - docker push $CONTAINER_LATEST_IMAGE
+  variables:
+    GIT_STRATEGY: none
+  when: manual
+
