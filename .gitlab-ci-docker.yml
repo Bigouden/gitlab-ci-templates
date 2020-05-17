@@ -43,4 +43,3 @@ Release:
   variables:
     GIT_STRATEGY: none
   when: manual
-
