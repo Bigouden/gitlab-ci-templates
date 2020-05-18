@@ -52,6 +52,7 @@ Anchore:
     - anchore-cli system wait
     - anchore-cli registry add "$CI_REGISTRY" "$CI_REGISTRY_USER" "$CI_REGISTRY_PASSWORD" --skip-validate
     - anchore-cli image add "$CONTAINER_TEST_IMAGE"
+    - anchore-cli image wait "$CONTAINER_TEST_IMAGE"
     - anchore-cli evaluate check --detail "$CONTAINER_TEST_IMAGE"
   variables:
     ANCHORE_CLI_URL: "http://anchore-engine:8228/v1"
