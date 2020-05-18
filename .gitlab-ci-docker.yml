@@ -43,7 +43,7 @@ Dive:
 Anchore:
   stage: Security
   image: 
-    name: anchore/engine-cli:latest
+    name: anchore/inline-scan:latest
   services:
     - name: anchore/inline-scan:latest
       alias: anchore-engine
