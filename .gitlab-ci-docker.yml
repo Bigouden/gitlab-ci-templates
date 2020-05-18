@@ -49,10 +49,8 @@ Anchore:
     - name: anchore/engine-db-preload:latest
       alias: anchore-db
   script:
-    - |
-      curl -o /tmp/anchore_ci_tools.py https://raw.githubusercontent.com/anchore/ci-tools/master/scripts/anchore_ci_tools.py
-      chmod +x /tmp/anchore_ci_tools.py
-      ln -s /tmp/anchore_ci_tools.py /usr/local/bin/anchore_ci_tools
+    - curl -o /tmp/anchore_ci_tools.py https://raw.githubusercontent.com/anchore/ci-tools/master/scripts/anchore_ci_tools.py
+    - chmod +x /tmp/anchore_ci_tools.py
     - anchore_ci_tools --setup
     - anchore-cli registry add "$CI_REGISTRY" "$CI_REGISTRY_USER" "$CI_REGISTRY_PASSWORD"  --skip-validate
     - anchore_ci_tools --analyze --report --image "$CONTAINER_TEST_IMAGE" --timeout "$ANCHORE_TIMEOUT"
@@ -76,6 +74,7 @@ Anchore:
     ANCHORE_CLI_SSL_VERIFY: "n"
     ANCHORE_FAIL_ON_POLICY: "true"
     ANCHORE_TIMEOUT: 500
+    PATH: "$PATH:~/tmp"
     POSTGRES_HOST_AUTH_METHOD: "trust"
 
 Release:
