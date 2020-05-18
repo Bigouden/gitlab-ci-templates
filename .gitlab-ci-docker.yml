@@ -50,6 +50,7 @@ Anchore:
     - anchore-cli image add "$CONTAINER_TEST_IMAGE"
     - anchore-cli evaluate check --detail "$CONTAINER_TEST_IMAGE"
   variables:
+    ANCHORE_CLI_URL: http://localhost:8228
     GIT_STRATEGY: none
 
 Release:
