@@ -48,8 +48,8 @@ Anchore:
   script:
     - anchore-cli system wait
     - anchore-cli registry add "$CI_REGISTRY" "$CI_REGISTRY_USER" "$CI_REGISTRY_PASSWORD" --skip-validate
-    - anchore-cli image add "$CI_REGISTRY_IMAGE:test"
-    - anchore-cli evaluate check --detail "$CI_REGISTRY_IMAGE:test"
+    - anchore-cli image add "$CONTAINER_TEST_IMAGE"
+    - anchore-cli evaluate check --detail "$CONTAINER_TEST_IMAGE"
   variables:
     GIT_STRATEGY: none
 
