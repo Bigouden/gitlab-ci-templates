@@ -44,13 +44,17 @@ Anchore:
   stage: Security
   image: 
     name: anchore/inline-scan:latest
+  services:
+    - name: anchore/inline-scan:latest
+      alias: anchore-engine
+      command: ["start"]
   script:
     - anchore-cli system wait
     - anchore-cli registry add "$CI_REGISTRY" "$CI_REGISTRY_USER" "$CI_REGISTRY_PASSWORD" --skip-validate
     - anchore-cli image add "$CONTAINER_TEST_IMAGE"
     - anchore-cli evaluate check --detail "$CONTAINER_TEST_IMAGE"
   variables:
-    ANCHORE_CLI_URL: http://localhost:8228
+    ANCHORE_CLI_URL: "http://anchore-engine:8228/v1"
     GIT_STRATEGY: none
 
 Release:
