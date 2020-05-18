@@ -76,6 +76,7 @@ Anchore:
     ANCHORE_CLI_SSL_VERIFY: "n"
     ANCHORE_FAIL_ON_POLICY: "true"
     ANCHORE_TIMEOUT: 500
+    POSTGRES_HOST_AUTH_METHOD: "trust"
     
 Release:
   stage: Release
