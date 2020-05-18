@@ -42,11 +42,12 @@ Dive:
 
 Anchore:
   stage: Security
-  image: anchore/anchore-engine:latest
-  entrypoint: [""]
+  image: 
+    name: anchore/anchore-engine:latest
+    entrypoint: [""]
   services:
     - name: anchore/engine-db-preload:latest
-  alias: anchore-db
+      alias: anchore-db
   script:
     - |
       curl -o /tmp/anchore_ci_tools.py https://raw.githubusercontent.com/anchore/ci-tools/master/scripts/anchore_ci_tools.py
