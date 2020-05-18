@@ -49,12 +49,11 @@ Anchore:
     - name: anchore/engine-db-preload:latest
       alias: anchore-db
   script:
-    - export PATH="$PATH:~/tmp"
     - curl -o /tmp/anchore_ci_tools.py https://raw.githubusercontent.com/anchore/ci-tools/master/scripts/anchore_ci_tools.py
     - chmod +x /tmp/anchore_ci_tools.py
     - anchore_ci_tools --setup
     - anchore-cli registry add "$CI_REGISTRY" "$CI_REGISTRY_USER" "$CI_REGISTRY_PASSWORD"  --skip-validate
-    - anchore_ci_tools --analyze --report --image "$CONTAINER_TEST_IMAGE" --timeout "$ANCHORE_TIMEOUT"
+    - /tmp/anchore_ci_tools.py --analyze --report --image "$CONTAINER_TEST_IMAGE" --timeout "$ANCHORE_TIMEOUT"
     - |
       if ; then
         anchore-cli evaluate check "$CONTAINER_TEST_IMAGE"
