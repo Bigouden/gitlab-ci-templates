@@ -31,10 +31,10 @@ Build:
   script:
     - docker build --pull -t $CONTAINER_TEST_IMAGE .
     - apk add bash curl 
-    - curl -s https://ci-tools.anchore.io/inline_scan-v0.3.3 | bash -s -- -r -t 500 "$CONTAINER_TEST_IMAGE"
+    - curl -s https://ci-tools.anchore.io/inline_scan-v0.3.3 | bash -s -- -r -f -t 500 "$CONTAINER_TEST_IMAGE"
     - docker push $CONTAINER_TEST_IMAGE
     - |
-      echo "Parsing Anchore reports."
+      echo "Parsing Anchore Reports."
       apk add jq
       bash <<'EOF'
       for f in anchore-reports/*; do
