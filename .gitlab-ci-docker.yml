@@ -30,29 +30,8 @@ Build:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker build --pull -t $CONTAINER_TEST_IMAGE .
-    - apk add bash curl 
-    - curl -s https://ci-tools.anchore.io/inline_scan-v0.3.3 | bash -s -- -r -f -t 500 "$CONTAINER_TEST_IMAGE"
     - docker push $CONTAINER_TEST_IMAGE
-    - |
-      echo "Parsing Anchore Reports."
-      apk add jq
-      bash <<'EOF'
-      for f in anchore-reports/*; do
-        if [[ "$f" =~ "content-os" ]]; then
-          printf "\n%s\n" "The following OS packages are installed on $CONTAINER_TEST_IMAGE :"
-          jq '[.content | sort_by(.package) | .[] | {package: .package, version: .version}]' $f || true
-        fi
-        if [[ "$f" =~ "vuln" ]]; then
-          printf "\n%s\n" "The following vulnerabilities were found on $CONTAINER_TEST_IMAGE :"
-          jq '[.vulnerabilities | group_by(.package) | .[] | {package: .[0].package, vuln: [.[].vuln]}]' $f || true
-        fi
-      done
-      EOF
-  artifacts:
-    name: ${CI_JOB_NAME}-${CI_COMMIT_REF_NAME}
-    paths:
-    - anchore-reports/*
-    
+
 Dive:
   stage: Inspect
   before_script:
