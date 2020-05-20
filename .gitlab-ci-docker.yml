@@ -58,7 +58,7 @@ Anchore:
     ANCHORE_CLI_URL: "http://anchore-engine:8228/v1"
     GIT_STRATEGY: none
 
-Release:
+Gitlab:
   stage: Release
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
