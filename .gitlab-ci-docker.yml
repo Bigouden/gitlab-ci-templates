@@ -72,7 +72,6 @@ Gitlab:
     GIT_STRATEGY: none
   when: manual
   
-    
 DockerHub:
   stage: Release
   before_script:
