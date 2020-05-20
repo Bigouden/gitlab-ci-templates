@@ -10,7 +10,6 @@ stages:
   - Quality
   - Build
   - Inspect
-  - Security
   - Release
   
 variables:
@@ -42,7 +41,7 @@ Dive:
     - docker run -v /var/run/docker.sock:/var/run/docker.sock:ro wagoodman/dive $CONTAINER_TEST_IMAGE --ci
 
 Anchore:
-  stage: Security
+  stage: Inspect
   image: 
     name: anchore/inline-scan:latest
   services:
