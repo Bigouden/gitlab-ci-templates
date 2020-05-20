@@ -90,5 +90,5 @@ DockerHub:
   only:
     variables:
       - $DOCKER_HUB_USER
-      - $DOCKER_HUB_PASSWORD'
+      - $DOCKER_HUB_PASSWORD
   when: manual
