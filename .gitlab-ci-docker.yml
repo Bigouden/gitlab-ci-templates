@@ -6,12 +6,6 @@ image: docker:latest
 services:
   - docker:dind
 
-stages:
-  - Quality
-  - Build
-  - Inspect
-  - Release
-  
 variables:
   CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:test
   CONTAINER_VERSION_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
