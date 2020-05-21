@@ -16,6 +16,9 @@ Hadolint:
   image: hadolint/hadolint:latest-debian
   script:
     - hadolint --ignore DL3013 --ignore DL3018 Dockerfile
+  rules:
+    - exists:
+      - Dockerfile
 
 Build:
   stage: Build
@@ -25,6 +28,9 @@ Build:
     - docker pull $CONTAINER_TEST_IMAGE || true
     - docker build --cache-from $CONTAINER_TEST_IMAGE --pull -t $CONTAINER_TEST_IMAGE .
     - docker push $CONTAINER_TEST_IMAGE
+  rules:
+    - exists:
+      - Dockerfile
 
 Dive:
   stage: Inspect
