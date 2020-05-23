@@ -55,6 +55,7 @@ Dive:
 
 Anchore:
   stage: Inspect
+  
   image: 
     name: anchore/inline-scan:latest
   services:
@@ -67,6 +68,7 @@ Anchore:
     - anchore-cli image add "$CONTAINER_TEST_IMAGE"
     - anchore-cli image wait "$CONTAINER_TEST_IMAGE"
     - anchore-cli evaluate check --detail "$CONTAINER_TEST_IMAGE"
+  allow_failure: true
   variables:
     ANCHORE_CLI_URL: "http://anchore-engine:8228/v1"
     GIT_STRATEGY: none
