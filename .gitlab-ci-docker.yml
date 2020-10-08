@@ -52,7 +52,7 @@ Dive:
   script:
     - docker pull $CONTAINER_TEST_IMAGE
     - docker run -v /var/run/docker.sock:/var/run/docker.sock:ro wagoodman/dive $CONTAINER_TEST_IMAGE --ci
-when: manual
+  when: manual
 
 Anchore:
   stage: Inspect
