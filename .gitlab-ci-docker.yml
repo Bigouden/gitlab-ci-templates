@@ -29,7 +29,6 @@ Dockerfile:
     - docker build --cache-from $CONTAINER_TEST_IMAGE --pull -t $CONTAINER_TEST_IMAGE .
     - docker push $CONTAINER_TEST_IMAGE
   variables:
-      DOCKER_HOST: tcp://docker:2375
       DOCKER_TLS_CERTDIR: "/certs"
   rules:
     - exists:
