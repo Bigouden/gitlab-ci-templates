@@ -2,10 +2,6 @@ workflow:
   rules:
     - if: $CI_MERGE_REQUEST_ID
 
-image: docker:latest
-services:
-  - docker:dind
-
 variables:
   CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:test
   CONTAINER_VERSION_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
@@ -28,8 +24,6 @@ Dockerfile:
     - docker pull $CONTAINER_TEST_IMAGE || true
     - docker build --cache-from $CONTAINER_TEST_IMAGE --pull -t $CONTAINER_TEST_IMAGE .
     - docker push $CONTAINER_TEST_IMAGE
-  variables:
-      DOCKER_TLS_CERTDIR: "/certs"
   rules:
     - exists:
       - Dockerfile
