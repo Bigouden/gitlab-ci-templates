@@ -4,6 +4,7 @@ workflow:
 
 variables:
   CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:test
+  CONTAINER_TEST_NAME: $CI_REGISTRY_IMAGE
   CONTAINER_VERSION_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   CONTAINER_LATEST_IMAGE: $CI_REGISTRY_IMAGE:latest
 
@@ -12,6 +13,8 @@ Hadolint:
   image: hadolint/hadolint:latest-debian
   script:
     - hadolint --ignore DL3013 --ignore DL3018 Dockerfile
+  inherit:
+    default: false
   rules:
     - exists:
       - Dockerfile
@@ -25,6 +28,8 @@ Dockerfile:
     - docker pull $CONTAINER_TEST_IMAGE || true
     - docker build --cache-from $CONTAINER_TEST_IMAGE --pull -t $CONTAINER_TEST_IMAGE .
     - docker push $CONTAINER_TEST_IMAGE
+  inherit:
+    default: false
   rules:
     - exists:
       - Dockerfile
@@ -39,6 +44,8 @@ RootFS:
     - ./build.sh
     - docker tag $CI_PROJECT_NAME $CONTAINER_TEST_IMAGE
     - docker push $CONTAINER_TEST_IMAGE
+  inherit:
+    default: false
   rules:
     - exists:
       - build.sh
@@ -51,6 +58,8 @@ Dive:
   script:
     - docker pull $CONTAINER_TEST_IMAGE
     - docker run -v /var/run/docker.sock:/var/run/docker.sock:ro wagoodman/dive $CONTAINER_TEST_IMAGE --ci
+  inherit:
+    default: false
   when: manual
 
 Anchore:
@@ -71,6 +80,8 @@ Anchore:
   variables:
     ANCHORE_CLI_URL: "http://anchore-engine:8228/v1"
     GIT_STRATEGY: none
+  inherit:
+    default: false
   when: manual
 
 Gitlab:
@@ -85,6 +96,8 @@ Gitlab:
     - docker push $CONTAINER_LATEST_IMAGE
   variables:
     GIT_STRATEGY: none
+  inherit:
+    default: false
   when: manual
   
 DockerHub:
@@ -102,6 +115,8 @@ DockerHub:
     GIT_STRATEGY: none
     DOCKER_HUB_VERSION_IMAGE: $DOCKER_HUB_USER/$CI_PROJECT_NAME:$CI_COMMIT_REF_NAME
     DOCKER_HUB_LATEST_IMAGE: $DOCKER_HUB_USER/$CI_PROJECT_NAME:latest
+  inherit:
+    default: false
   rules:
     - if: $DOCKER_HUB_USER && $DOCKER_HUB_PASSWORD
       when: manual
