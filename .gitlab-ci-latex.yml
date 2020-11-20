@@ -20,7 +20,7 @@ Send Email:
     - echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
     - apk add --upgrade swaks perl-net-ssleay
   script:
-    - swaks --server $SMTP_SERVER --port $SMTP_PORT -tlsos -hs --auth-user $SMTP_USERNAME --auth-password $SMTP_PASSWORD --from "$MAIL_FROM" --to "$MAIL_TO" -h-Subject "$MAIL_SUBJECT" --body "$MAIL_BODY" --attach @$FILENAME.pdf --attach-name $FILENAME.pdf
+    - swaks --server $SMTP_SERVER --port $SMTP_PORT -tlsos -hs --auth-user $SMTP_USERNAME --auth-password $SMTP_PASSWORD --from "$MAIL_FROM" --to "$MAIL_TO" -h-Subject "$MAIL_SUBJECT" --body "$MAIL_BODY" --attach-name $FILENAME.pdf --attach @$FILENAME.pdf
   variables:
     GIT_STRATEGY: none
   rules:
