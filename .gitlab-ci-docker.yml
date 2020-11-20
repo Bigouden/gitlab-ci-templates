@@ -6,6 +6,7 @@ variables:
   CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:test
   CONTAINER_VERSION_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   CONTAINER_LATEST_IMAGE: $CI_REGISTRY_IMAGE:latest
+  CONTAINER_SMTP_IMAGE: alpine:edge
 
 Hadolint:
   stage: Quality
@@ -119,3 +120,16 @@ DockerHub:
   rules:
     - if: $DOCKER_HUB_USER && $DOCKER_HUB_PASSWORD
       when: manual
+
+Send Email:
+  stage: Notify
+  image: $CONTAINER_SMTP_IMAGE
+  before_script:
+    - echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
+    - apk add --upgrade swaks perl-net-ssleay
+  script:
+    - swaks --server $SMTP_SERVER --port $SMTP_PORT -tlsos --auth-user $SMTP_USERNAME --auth-password $SMTP_PASSWORD --from "$MAIL_FROM" --to "$MAIL_TO" -h-Subject "$MAIL_SUBJECT" --body "$MAIL_BODY" --attach $MAIL_ATTACH
+  variables:
+    GIT_STRATEGY: none
+  rules:
+    - if: $SMTP_SERVER && $SMTP_PORT && $SMTP_USERNAME && $SMTP_PASSWORD && $MAIL_FROM && $MAIL_TO && $MAIL_SUBJECT && $MAIL_BODY && $MAIL_ATTACH
