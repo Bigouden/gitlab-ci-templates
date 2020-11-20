@@ -12,6 +12,7 @@ Compile:
   artifacts:
     paths:
       - $FILENAME.pdf
+  when: always
 
 Send Email:
   stage: Notify
