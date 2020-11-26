@@ -1,7 +1,7 @@
 workflow:
   rules:
     - if: $CI_MERGE_REQUEST_ID
-    - if: $CI_COMMIT_BRANCH == 'master' 
+    - if: $CI_COMMIT_BRANCH
 
 variables:
   CONTAINER_LATEX_IMAGE: registry.gitlab.com/bigouden/alpine-latex:latest
