@@ -59,6 +59,7 @@ Dive:
     - docker run -v /var/run/docker.sock:/var/run/docker.sock:ro wagoodman/dive $CONTAINER_TEST_IMAGE --ci
   inherit:
     default: false
+  dependencies: []
   when: manual
 
 Anchore:
@@ -81,6 +82,7 @@ Anchore:
     GIT_STRATEGY: none
   inherit:
     default: false
+  dependencies: []
   when: manual
 
 Gitlab:
@@ -97,6 +99,7 @@ Gitlab:
     GIT_STRATEGY: none
   inherit:
     default: false
+  dependencies: []
   when: manual
   
 DockerHub:
@@ -116,6 +119,7 @@ DockerHub:
     DOCKER_HUB_LATEST_IMAGE: $DOCKER_HUB_USER/$CI_PROJECT_NAME:latest
   inherit:
     default: false
+  dependencies: []
   rules:
     - if: $DOCKER_HUB_USER && $DOCKER_HUB_PASSWORD
       when: manual
