@@ -83,6 +83,7 @@ Anchore:
 
 Gitlab:
   stage: Release
+  image: docker:latest
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
@@ -98,6 +99,7 @@ Gitlab:
   
 DockerHub:
   stage: Release
+  image: docker:latest
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
