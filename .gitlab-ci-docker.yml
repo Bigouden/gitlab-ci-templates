@@ -61,7 +61,7 @@ Dive:
     - dive $CONTAINER_TEST_IMAGE
   dependencies: []
   variables:
-    CI: true
+    CI: "true""
   when: manual
 
 Anchore:
