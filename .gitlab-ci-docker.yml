@@ -53,11 +53,14 @@ Dive:
   stage: Inspect
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  image: docker:latest
+  image: wagoodman/dive:latest
+  entrypoint: [""]
   script:
     - docker pull $CONTAINER_TEST_IMAGE
-    - docker run -v /var/run/docker.sock:/var/run/docker.sock:ro wagoodman/dive $CONTAINER_TEST_IMAGE --ci
+    - dive $CONTAINER_TEST_IMAGE
   dependencies: []
+  variables:
+    CI: true
   when: manual
 
 Anchore:
