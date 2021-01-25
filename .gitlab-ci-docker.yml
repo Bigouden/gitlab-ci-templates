@@ -53,8 +53,9 @@ Dive:
   stage: Inspect
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  image: wagoodman/dive:latest
-  entrypoint: [""]
+  image: 
+    name: wagoodman/dive:latest
+    entrypoint: [""]
   script:
     - docker pull $CONTAINER_TEST_IMAGE
     - dive $CONTAINER_TEST_IMAGE
