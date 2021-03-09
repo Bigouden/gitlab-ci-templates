@@ -1,9 +1,7 @@
-workflow:
-  rules:
-    - if: $CI_MERGE_REQUEST_ID
-
 default:
   interruptible: true
+  except:
+    - master
 
 variables:
   CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:test
@@ -100,6 +98,34 @@ Gitlab:
     GIT_STRATEGY: none
   dependencies: []
   when: manual
+
+Gitlab:
+  stage: Release Latest
+  image: docker:latest
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - MR_BRANCH_LAST_COMMIT_SHA=$(
+      curl -s \
+        --header "PRIVATE-TOKEN: $CI_PRIVATE_TOKEN" \
+        "$CI_API_V4_URL/projects/$CI_PROJECT_ID/repository/commits/$CI_COMMIT_SHA" |\
+        jq -r '.parent_ids | del(.[] | select(. == "'$CI_COMMIT_BEFORE_SHA'")) | .[-1]'
+    )
+    - MR_BRANCH_NAME=$(
+      curl -s \
+        --header "PRIVATE-TOKEN: $CI_PRIVATE_TOKEN" \
+        "$CI_API_V4_URL/projects/$CI_PROJECT_ID/repository/commits/$MR_BRANCH_LAST_COMMIT_SHA/merge_requests" |\
+        jq -r '.[0].source_branch'
+    )
+  script:
+    - docker pull $CI_REGISTRY_IMAGE:$MR_BRANCH_NAME
+    - docker tag $CI_REGISTRY_IMAGE:$MR_BRANCH_NAME $CONTAINER_LATEST_IMAGE
+    - docker push $CONTAINER_LATEST_IMAGE
+  variables:
+    GIT_STRATEGY: none
+  dependencies: []
+  when: manual
+  only:
+    - master
   
 DockerHub:
   stage: Release
