@@ -1,7 +1,5 @@
 default:
   interruptible: true
-  except:
-    - master
 
 variables:
   CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:test
@@ -17,6 +15,8 @@ Hadolint:
   rules:
     - exists:
       - Dockerfile
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: never
 
 Dockerfile:
   stage: Build
@@ -31,6 +31,8 @@ Dockerfile:
   rules:
     - exists:
       - Dockerfile
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: never
       
 RootFS:
   stage: Build
@@ -46,6 +48,8 @@ RootFS:
   rules:
     - exists:
       - build.sh
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: never
 
 Dive:
   stage: Inspect
@@ -61,6 +65,9 @@ Dive:
   variables:
     CI: "true"
   when: manual
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: never
 
 Anchore:
   stage: Inspect
@@ -82,6 +89,9 @@ Anchore:
     GIT_STRATEGY: none
   dependencies: []
   when: manual
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: never
 
 Gitlab:
   stage: Release
@@ -98,6 +108,9 @@ Gitlab:
     GIT_STRATEGY: none
   dependencies: []
   when: manual
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: never
 
 Gitlab:
   stage: Release Latest
@@ -147,3 +160,5 @@ DockerHub:
   rules:
     - if: $DOCKER_HUB_USER && $DOCKER_HUB_PASSWORD
       when: manual
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: never
