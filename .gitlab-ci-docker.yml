@@ -67,9 +67,9 @@ Dive:
 Anchore:
   stage: Inspect
   image: 
-    name: anchore/inline-scan:v0.8.2
+    name: anchore/inline-scan:latest
   services:
-    - name: anchore/inline-scan:v0.8.2
+    - name: anchore/inline-scan:latest
       alias: anchore-engine
       command: ["start"]
   script:
