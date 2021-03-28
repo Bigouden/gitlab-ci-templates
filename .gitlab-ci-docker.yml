@@ -62,7 +62,6 @@ Dive:
   dependencies: []
   variables:
     CI: "true"
-  when: manual
 
 Anchore:
   stage: Inspect
@@ -99,7 +98,6 @@ Gitlab:
   variables:
     GIT_STRATEGY: none
   dependencies: []
-  when: manual
   
 DockerHub:
   stage: Release
@@ -120,4 +118,3 @@ DockerHub:
   dependencies: []
   rules:
     - if: $DOCKER_HUB_USER && $DOCKER_HUB_PASSWORD
-      when: manual
