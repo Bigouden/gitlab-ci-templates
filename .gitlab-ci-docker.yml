@@ -128,6 +128,6 @@ Gitlab:
     name: $CONTAINER_REG_IMAGE
     entrypoint: [""]
   script:
-    - reg rm -d --auth-url $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $(echo $CI_PROJECT_PATH_SLUG | tr '[:upper:]' '[:lower:]'):test
+    - reg rm -d --auth-url $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $(echo $CI_PROJECT_PATH | tr '[:upper:]' '[:lower:]'):test
   variables:
     GIT_STRATEGY: none
