@@ -31,6 +31,7 @@ Dockerfile:
     - docker build --cache-from $CONTAINER_TEST_IMAGE --pull -t $CONTAINER_TEST_IMAGE .
     - docker push $CONTAINER_TEST_IMAGE
   dependencies: []
+  retry: 2
   rules:
     - exists:
       - Dockerfile
@@ -46,6 +47,7 @@ RootFS:
     - docker tag $CI_PROJECT_NAME $CONTAINER_TEST_IMAGE
     - docker push $CONTAINER_TEST_IMAGE
   dependencies: []
+  retry: 2
   rules:
     - exists:
       - build.sh
