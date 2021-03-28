@@ -124,7 +124,9 @@ DockerHub:
 
 Gitlab:
   stage: Clean
-  image: $CONTAINER_REG_IMAGE
+  image: 
+    name: $CONTAINER_REG_IMAGE
+    entrypoint: [""]
   script:
     - reg rm -d --auth-url $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_PROJECT_PATH:test
   variables:
