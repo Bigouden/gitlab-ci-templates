@@ -1,19 +1,21 @@
 workflow:
   rules:
-    - if: $CI_MERGE_REQUEST_ID
+    - if: $CI_COMMIT_BRANCH
 
 default:
   interruptible: true
 
 variables:
-  CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:test
+  ANCHORE_IMAGE: anchore/inline-scan:latest
+  CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME-test
   CONTAINER_VERSION_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
-  CONTAINER_LATEST_IMAGE: $CI_REGISTRY_IMAGE:latest
-  CONTAINER_REG_IMAGE: $CI_REGISTRY/bigouden/alpine-reg:latest
+  DIVE_IMAGE: wagoodman/dive:latest
+  DOCKER_IMAGE: docker:latest
+  HADOLINT_IMAGE: hadolint/hadolint:latest-debian 
 
 Hadolint:
   stage: Quality
-  image: hadolint/hadolint:latest-debian
+  image: $HADOLINT_IMAGE
   script:
     - hadolint --ignore DL3013 --ignore DL3018 Dockerfile
   dependencies: []
@@ -21,9 +23,9 @@ Hadolint:
     - exists:
       - Dockerfile
 
-Dockerfile:
+Dockerfile (custom_branch):
   stage: Build
-  image: docker:latest
+  image: $DOCKER_IMAGE
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
@@ -33,15 +35,37 @@ Dockerfile:
   dependencies: []
   retry: 2
   rules:
-    - exists:
-      - Dockerfile
+    - if: '$CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH'
+      exists:
+        - Dockerfile
+
+# $CI_API_TOKEN (API Read Right) Mandatory to retrieve MR Branch Name !
+Dockerfile (default_branch):
+  stage: Build
+  image: $DOCKER_IMAGE
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - apk add --no-cache --update curl jq
+  script:
+    - MR_BRANCH_LAST_COMMIT_SHA=$(curl -k -s "$CI_API_V4_URL/projects/$CI_PROJECT_ID/repository/commits/$CI_COMMIT_SHA?private_token=$CI_API_TOKEN" | jq -r '.parent_ids | del(.[] | select(. == "'$CI_COMMIT_BEFORE_SHA'")) | .[-1]')
+    - MR_BRANCH_NAME=$(curl -k -s "$CI_API_V4_URL/projects/$CI_PROJECT_ID/repository/commits/$MR_BRANCH_LAST_COMMIT_SHA/merge_requests?private_token=$CI_API_TOKEN" | jq -r '.[0].source_branch')
+    - echo "MERGE REQUEST BRANCH NAME = $MR_BRANCH_NAME"
+    - docker pull $CI_REGISTRY_IMAGE:$MR_BRANCH_NAME || true
+    - docker build --cache-from $CI_REGISTRY_IMAGE:$MR_BRANCH_NAME --pull -t $CONTAINER_TEST_IMAGE .
+    - docker push $CONTAINER_TEST_IMAGE
+  dependencies: []
+  retry: 2
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      exists:
+        - Dockerfile
       
 RootFS:
   stage: Build
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - apk add --update curl tar
-  image: docker:latest
+  image: $DOCKER_IMAGE
   script:
     - ./build.sh
     - docker tag $CI_PROJECT_NAME $CONTAINER_TEST_IMAGE
@@ -57,7 +81,7 @@ Dive:
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   image: 
-    name: wagoodman/dive:latest
+    name: $DIVE_IMAGE
     entrypoint: [""]
   script:
     - docker pull $CONTAINER_TEST_IMAGE
@@ -69,9 +93,9 @@ Dive:
 Anchore:
   stage: Inspect
   image: 
-    name: anchore/inline-scan:latest
+    name: $ANCHORE_IMAGE
   services:
-    - name: anchore/inline-scan:latest
+    - name: $ANCHORE_IMAGE
       alias: anchore-engine
       command: ["start"]
   script:
@@ -89,35 +113,36 @@ Anchore:
 
 Gitlab:
   stage: Release
-  image: docker:latest
+  image: $DOCKER_IMAGE
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker pull $CONTAINER_TEST_IMAGE
     - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_VERSION_IMAGE
-    - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_LATEST_IMAGE
     - docker push $CONTAINER_VERSION_IMAGE
-    - docker push $CONTAINER_LATEST_IMAGE
   variables:
     GIT_STRATEGY: none
   dependencies: []
-  
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      variables:
+        CONTAINER_VERSION_IMAGE: $CI_REGISTRY_IMAGE:stable
+    - when: on_success
+
 DockerHub:
   stage: Release
-  image: docker:latest
+  image: $DOCKER_IMAGE
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
   script:
     - docker pull $CONTAINER_TEST_IMAGE
     - docker tag $CONTAINER_TEST_IMAGE $DOCKER_HUB_VERSION_IMAGE
-    - docker tag $CONTAINER_TEST_IMAGE $DOCKER_HUB_LATEST_IMAGE
     - docker push $DOCKER_HUB_VERSION_IMAGE
-    - docker push $DOCKER_HUB_LATEST_IMAGE
   variables:
     GIT_STRATEGY: none
-    DOCKER_HUB_VERSION_IMAGE: $DOCKER_HUB_USER/$CI_PROJECT_NAME:$CI_COMMIT_REF_NAME
-    DOCKER_HUB_LATEST_IMAGE: $DOCKER_HUB_USER/$CI_PROJECT_NAME:latest
   dependencies: []
   rules:
-    - if: $DOCKER_HUB_USER && $DOCKER_HUB_PASSWORD
+    - if: $DOCKER_HUB_USER && $DOCKER_HUB_PASSWORD && '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      variables:
+        DOCKER_HUB_VERSION_IMAGE: $DOCKER_HUB_USER/$CI_PROJECT_NAME:stable
