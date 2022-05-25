@@ -22,6 +22,8 @@ Hadolint:
   script:
     - hadolint --ignore DL3013 --ignore DL3018 Dockerfile
   dependencies: []
+  variables:
+    CI_DEBUG_TRACE: "true"
   rules:
     - exists:
       - Dockerfile
