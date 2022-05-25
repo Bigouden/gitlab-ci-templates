@@ -1,7 +1,7 @@
 workflow:
   rules:
     - if: $CI_COMMIT_BRANCH 
-    - if: $CI_COMMIT_BEFORE_SHA =~ /(?0{40})/
+    - if: $CI_COMMIT_BEFORE_SHA =~ /0{40}/
       when: never
 
 default:
