@@ -1,6 +1,6 @@
 workflow:
   rules:
-    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_BRANCH && $CI_COMMIT_BEFORE_SHA =~ /(?!0{40})/
 
 default:
   interruptible: true
