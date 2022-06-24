@@ -4,6 +4,8 @@ workflow:
 
 default:
   interruptible: true
+  tags:
+    - docker
 
 variables:
   ANCHORE_IMAGE: anchore/inline-scan:latest
