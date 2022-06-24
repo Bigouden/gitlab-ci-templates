@@ -7,12 +7,25 @@ default:
 
 variables:
   ANCHORE_IMAGE: anchore/inline-scan:latest
+  CONTAINER_CLIENT_IMAGE: alpine:latest
   CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME-test
   CONTAINER_VERSION_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   DIVE_IMAGE: wagoodman/dive:latest
   DOCKER_IMAGE: docker:latest
   HADOLINT_IMAGE: hadolint/hadolint:latest-debian
   GIT_DEPTH: 10
+
+Pylint:
+  stage: Quality
+  image: $CONTAINER_CLIENT_IMAGE
+  before_script:
+    - apk add --no-cache --update git py3-pip
+    - pip install pylint
+  script:
+    - find . -type f -name "*.py" | xargs pylint 
+  rules:
+    - exists:
+        - *.py
 
 Hadolint:
   stage: Quality
