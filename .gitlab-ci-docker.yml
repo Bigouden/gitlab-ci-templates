@@ -21,6 +21,7 @@ Pylint:
   before_script:
     - apk add --no-cache --update git py3-pip
     - pip install pylint
+  dependencies: []
   script:
     - find . -type f -name "*.py" | xargs pylint 
   rules:
