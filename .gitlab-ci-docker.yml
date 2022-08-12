@@ -89,7 +89,7 @@ Dockerfile (tag):
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - apk add --no-cache --update curl jq
   script:
-    - BRANCH_NAME=$(curl -k -s "$CI_API_V4_URL/projects/$CI_PROJECT_ID/repository/commits/$CI_COMMIT_SHA/refs?type=branch?private_token=$CI_API_TOKEN" | jq -r '.[0].name')
+    - BRANCH_NAME=$(curl -k -s "$CI_API_V4_URL/projects/$CI_PROJECT_ID/repository/commits/$CI_COMMIT_SHA/refs?type=branch?private_token=$CI_API_TOKEN" | jq -r '[.[] | .name] | .[0]')
     - echo "BRANCH NAME = $BRANCH_NAME"
     - test "$BRANCH_NAME" == "master" && BRANCH_NAME="stable"
     - docker pull $CI_REGISTRY_IMAGE:BRANCH_NAME || true
