@@ -91,7 +91,7 @@ Dockerfile (default_branch_no_cache):
   dependencies: []
   retry: 2
   rules:
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH' && '$DOCKER_BUILD == "nocache"'
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $DOCKER_BUILD == "nocache"
       exists:
         - Dockerfile
 
