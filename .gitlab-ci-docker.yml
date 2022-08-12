@@ -92,7 +92,7 @@ Dockerfile (tag):
     - LAST_COMMIT_SHA=$(curl -k -s "$CI_API_V4_URL/projects/$CI_PROJECT_ID/repository/commits/$CI_COMMIT_SHA?private_token=$CI_API_TOKEN" | jq -r '.parent_ids | del(.[] | select(. == "'$CI_COMMIT_BEFORE_SHA'")) | .[-1]')
     - BRANCH_NAME=$(curl -k -s "$CI_API_V4_URL/projects/$CI_PROJECT_ID/repository/commits/LAST_COMMIT_SHA/refs?type=branch?private_token=$CI_API_TOKEN" | jq -r '.[0].name')
     - echo "BRANCH NAME = $BRANCH_NAME"
-    - \[\[ "$BRANCH_NAME" == "$CI_DEFAULT_BRANCH" \]\] && BRANCH_NAME="stable"
+    - test "$BRANCH_NAME" == "master" && BRANCH_NAME="stable"
     - docker pull $CI_REGISTRY_IMAGE:BRANCH_NAME || true
     - docker build --cache-from $CI_REGISTRY_IMAGE:$BRANCH_NAME --pull -t $CONTAINER_TEST_IMAGE .
     - docker push $CONTAINER_TEST_IMAGE
