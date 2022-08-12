@@ -94,7 +94,7 @@ Dockerfile (tag):
     - echo "BRANCH NAME = $BRANCH_NAME"
     - [[ "$BRANCH_NAME" == "$CI_DEFAULT_BRANCH" ]] && BRANCH_NAME="stable"
     - docker pull $CI_REGISTRY_IMAGE:BRANCH_NAME || true
-    - docker build --cache-from $CI_REGISTRY_IMAGE:$MR_BRANCH_NAME --pull -t $CONTAINER_TEST_IMAGE .
+    - docker build --cache-from $CI_REGISTRY_IMAGE:$BRANCH_NAME --pull -t $CONTAINER_TEST_IMAGE .
     - docker push $CONTAINER_TEST_IMAGE
   dependencies: []
   retry: 2
