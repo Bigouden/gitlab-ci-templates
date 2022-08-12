@@ -180,5 +180,21 @@ Gitlab Container Registry (custom branch):
   retry: 2
   rules:
     - if: '$CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH'
-      exists:
-        - Dockerfile
+
+# $CI_API_TOKEN (API write right) mandatory to delete container registry tag !
+Gitlab Container Registry (default branch):
+  stage: Clean
+  image: $DOCKER_IMAGE
+  before_script:
+    - apk add --no-cache --update curl jq
+  script:
+    - CONTAINER_REGISTRY_ID=$(curl -k -s "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories?private_token=$CI_API_TOKEN" | jq -r '.[0].id')
+    - MR_BRANCH_LAST_COMMIT_SHA=$(curl -k -s "$CI_API_V4_URL/projects/$CI_PROJECT_ID/repository/commits/$CI_COMMIT_SHA?private_token=$CI_API_TOKEN" | jq -r '.parent_ids | del(.[] | select(. == "'$CI_COMMIT_BEFORE_SHA'")) | .[-1]')
+    - MR_BRANCH_NAME=$(curl -k -s "$CI_API_V4_URL/projects/$CI_PROJECT_ID/repository/commits/$MR_BRANCH_LAST_COMMIT_SHA/merge_requests?private_token=$CI_API_TOKEN" | jq -r '.[0].source_branch')
+    - echo "MERGE REQUEST BRANCH NAME = $MR_BRANCH_NAME"
+    - curl -k -s --request DELETE "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$CONTAINER_REGISTRY_ID/tags/$CI_COMMIT_REF_NAME-test?private_token=$CI_API_TOKEN"
+    - curl -k -s --request DELETE "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$CONTAINER_REGISTRY_ID/tags/$MR_BRANCH_NAME?private_token=$CI_API_TOKEN"
+  dependencies: []
+  retry: 2
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
