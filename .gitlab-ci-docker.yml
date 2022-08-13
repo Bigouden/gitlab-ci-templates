@@ -98,7 +98,7 @@ Dockerfile (tag):
     - 'apk add --no-cache --update curl jq'
   script:
     - 'COMMIT_BRANCH_NAME=$(curl -k -s --header "PRIVATE-TOKEN: $CI_API_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/repository/commits/$CI_COMMIT_SHA/refs?type=branch" |  jq -r ".[0].name")'
-    - 'echo "COMMIT BRANCH NAME: $COMMIT BRANCH_NAME"'
+    - 'echo "COMMIT BRANCH NAME: $COMMIT_BRANCH_NAME"'
     - 'test "$COMMIT_BRANCH_NAME" == "$CI_DEFAULT_BRANCH" && COMMIT_BRANCH_NAME="stable"'
     - 'echo "PULLING : $CI_REGISTRY_IMAGE:$COMMIT_BRANCH_NAME"'
     - 'docker pull $CI_REGISTRY_IMAGE:$COMMIT_BRANCH_NAME || true'
