@@ -3,6 +3,9 @@ workflow:
     - if: '$CI_COMMIT_BRANCH && $CI_COMMIT_BEFORE_SHA !~ /0{40}/'
     - if: '$CI_PIPELINE_SOURCE == "web"'
     - if: '$CI_COMMIT_TAG'
+      variables:
+        CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG-test
+        CONTAINER_VERSION_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
 
 default:
   interruptible: true
@@ -50,8 +53,10 @@ Dockerfile (custom_branch):
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
+    - 'echo "PULLING : $CONTAINER_TEST_IMAGE"'
     - 'docker pull $CONTAINER_TEST_IMAGE || true'
     - 'docker build --cache-from $CONTAINER_TEST_IMAGE --pull -t $CONTAINER_TEST_IMAGE .'
+    - 'echo "PUSHING : $CONTAINER_TEST_IMAGE"'
     - 'docker push $CONTAINER_TEST_IMAGE'
   dependencies: []
   retry: 2
@@ -72,9 +77,10 @@ Dockerfile (default_branch):
     - 'echo MERGE REQUEST LAST COMMIT SHA: $MR_LAST_COMMIT_SHA'
     - 'MR_BRANCH_NAME=$(curl -k -s --header "PRIVATE-TOKEN: $CI_API_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/repository/commits/$MR_BRANCH_LAST_COMMIT_SHA/merge_requests" | jq -r ".[0].source_branch")'
     - 'echo "MERGE REQUEST BRANCH NAME: $MR_BRANCH_NAME"'
-    - 'echo "Pulling : $CI_REGISTRY_IMAGE:$MR_BRANCH_NAME"'
+    - 'echo "PULLING : $CI_REGISTRY_IMAGE:$MR_BRANCH_NAME"'
     - 'docker pull $CI_REGISTRY_IMAGE:$MR_BRANCH_NAME || true'
     - 'docker build --cache-from $CI_REGISTRY_IMAGE:$MR_BRANCH_NAME --pull -t $CONTAINER_TEST_IMAGE .'
+    - 'echo "PUSHING : $CONTAINER_TEST_IMAGE"'
     - 'docker push $CONTAINER_TEST_IMAGE'
   dependencies: []
   retry: 2
@@ -94,16 +100,15 @@ Dockerfile (tag):
     - 'COMMIT_BRANCH_NAME=$(curl -k -s --header "PRIVATE-TOKEN: $CI_API_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/repository/commits/$CI_COMMIT_SHA/refs?type=branch" |  jq -r ".[0].name")'
     - 'echo "COMMIT BRANCH NAME: $COMMIT BRANCH_NAME"'
     - 'test "$COMMIT_BRANCH_NAME" == "$CI_DEFAULT_BRANCH" && COMMIT_BRANCH_NAME="stable"'
-    - 'echo "Pulling : $CI_REGISTRY_IMAGE:$COMMIT_BRANCH_NAME"'
+    - 'echo "PULLING : $CI_REGISTRY_IMAGE:$COMMIT_BRANCH_NAME"'
     - 'docker pull $CI_REGISTRY_IMAGE:$COMMIT_BRANCH_NAME || true'
     - 'docker build --cache-from $CI_REGISTRY_IMAGE:$COMMIT_BRANCH_NAME --pull -t $CONTAINER_TEST_IMAGE .'
+    - 'echo "PUSHING : $CONTAINER_TEST_IMAGE"'
     - 'docker push $CONTAINER_TEST_IMAGE'
   dependencies: []
   retry: 2
   rules:
     - if: '$CI_COMMIT_TAG'
-      variables:
-        CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG-test
       exists:
         - Dockerfile
 
@@ -116,6 +121,7 @@ RootFS:
   script:
     - './build.sh'
     - 'docker tag $CI_PROJECT_NAME $CONTAINER_TEST_IMAGE'
+    - 'echo "PUSHING : $CONTAINER_TEST_IMAGE"'
     - 'docker push $CONTAINER_TEST_IMAGE'
   dependencies: []
   retry: 2
@@ -164,10 +170,11 @@ Gitlab:
   before_script:
     - 'docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY'
   script:
-    - 'echo "Pulling: $CONTAINER_TEST_IMAGE"'
+    - 'echo "PULLING: $CONTAINER_TEST_IMAGE"'
     - 'docker pull $CONTAINER_TEST_IMAGE'
+    - 'echo "TAGGING: $CONTAINER_TEST_IMAGE -> $CONTAINER_VERSION_IMAGE"'
     - 'docker tag $CONTAINER_TEST_IMAGE $CONTAINER_VERSION_IMAGE'
-    - 'echo "Pushing: $CONTAINER_VERSION_IMAGE"'
+    - 'echo "PUSHING: $CONTAINER_VERSION_IMAGE"'
     - 'docker push $CONTAINER_VERSION_IMAGE'
   variables:
     GIT_STRATEGY: none
@@ -178,7 +185,6 @@ Gitlab:
         CONTAINER_VERSION_IMAGE: $CI_REGISTRY_IMAGE:stable
     - if: '$CI_COMMIT_TAG'
       variables:
-        CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMiT_TAG-test
         CONTAINER_VERSION_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMiT_TAG
     - when: on_success
 
@@ -189,10 +195,11 @@ DockerHub:
     - 'docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY'
     - 'docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD'
   script:
-    - 'echo "Pulling: $CONTAINER_TEST_IMAGE"'
+    - 'echo "PULLING: $CONTAINER_TEST_IMAGE"'
     - 'docker pull $CONTAINER_TEST_IMAGE'
+    - 'echo "TAGGING: $CONTAINER_TEST_IMAGE -> $DOCKER_HUB_VERSION_IMAGE"'
     - 'docker tag $CONTAINER_TEST_IMAGE $DOCKER_HUB_VERSION_IMAGE'
-    - 'echo "Pushing: $DOCKER_HUB_VERSION_IMAGE"'
+    - 'echo "PUSHING: $DOCKER_HUB_VERSION_IMAGE"'
     - 'docker push $DOCKER_HUB_VERSION_IMAGE'
   variables:
     GIT_STRATEGY: none
@@ -203,7 +210,6 @@ DockerHub:
         DOCKER_HUB_VERSION_IMAGE: $DOCKER_HUB_USER/$CI_PROJECT_NAME:stable
     - if: '$DOCKER_HUB_USER && $DOCKER_HUB_PASSWORD && $CI_COMMIT_TAG'
       variables:
-        CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMiT_TAG-test
         CONTAINER_VERSION_IMAGE: $DOCKER_HUB_USER/$CI_PROJECT_NAME:$CI_COMMiT_TAG
 
 # $CI_API_TOKEN (API write right) mandatory to delete container registry tag !
@@ -215,7 +221,7 @@ Gitlab Container Registry (custom branch):
   script:
     - 'CONTAINER_REGISTRY_ID=$(curl -k -s --header "PRIVATE-TOKEN: $CI_API_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories" | jq -r ".[0].id")'
     - 'echo "CONTAINER REGISTRY ID: $CONTAINER_REGISTRY_ID"'
-    - 'echo "Deleting: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME-test"'
+    - 'echo "DELETING: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME-test"'
     - 'curl -k -s --header "PRIVATE-TOKEN: $CI_API_TOKEN" --request DELETE "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$CONTAINER_REGISTRY_ID/tags/$CI_COMMIT_REF_NAME-test"'
   dependencies: []
   retry: 2
@@ -235,9 +241,9 @@ Gitlab Container Registry (default branch):
     - 'echo MERGE REQUEST LAST COMMIT SHA: $MR_LAST_COMMIT_SHA'
     - 'MR_BRANCH_NAME=$(curl -k -s --header "PRIVATE-TOKEN: $CI_API_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/repository/commits/$MR_BRANCH_LAST_COMMIT_SHA/merge_requests" | jq -r ".[0].source_branch")'
     - 'echo "MERGE REQUEST BRANCH NAME: $MR_BRANCH_NAME"'
-    - 'echo "Deleting: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME-test"'
+    - 'echo "DELETING: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME-test"'
     - 'curl -k -s --header "PRIVATE-TOKEN: $CI_API_TOKEN" --request DELETE "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$CONTAINER_REGISTRY_ID/tags/$CI_COMMIT_REF_NAME-test"'
-    - 'echo "Deleting: $CI_REGISTRY_IMAGE:$MR_BRANCH_NAME"'
+    - 'echo "DELETING: $CI_REGISTRY_IMAGE:$MR_BRANCH_NAME"'
     - 'curl -k -s --header "PRIVATE-TOKEN: $CI_API_TOKEN" --request DELETE "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$CONTAINER_REGISTRY_ID/tags/$MR_BRANCH_NAME"'
   dependencies: []
   retry: 2
@@ -253,7 +259,7 @@ Gitlab Container Registry (tag):
   script:
     - 'CONTAINER_REGISTRY_ID=$(curl -k -s --header "PRIVATE-TOKEN: $CI_API_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories" | jq -r ".[0].id")'
     - 'echo "CONTAINER REGISTRY ID: $CONTAINER_REGISTRY_ID"'
-    - 'echo "Deleting: $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG-test"'
+    - 'echo "DELETING: $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG-test"'
     - 'curl -k -s --header "PRIVATE-TOKEN: $CI_API_TOKEN" --request DELETE "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$CONTAINER_REGISTRY_ID/tags/$CI_COMMIT_TAG-test"'
   dependencies: []
   retry: 2
