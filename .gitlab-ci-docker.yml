@@ -74,7 +74,7 @@ Dockerfile (default_branch):
     - 'apk add --no-cache --update curl jq'
   script:
     - 'MR_BRANCH_LAST_COMMIT_SHA=$(curl -k -s --header "PRIVATE-TOKEN: $CI_API_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/repository/commits/$CI_COMMIT_SHA" | jq -r ".parent_ids  | .[-1]")'
-    - 'echo MERGE REQUEST LAST COMMIT SHA: $MR_LAST_COMMIT_SHA'
+    - 'echo MERGE REQUEST BRANCH LAST COMMIT SHA: $MR_BRANCH_LAST_COMMIT_SHA'
     - 'MR_BRANCH_NAME=$(curl -k -s --header "PRIVATE-TOKEN: $CI_API_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/repository/commits/$MR_BRANCH_LAST_COMMIT_SHA/merge_requests" | jq -r ".[0].source_branch")'
     - 'echo "MERGE REQUEST BRANCH NAME: $MR_BRANCH_NAME"'
     - 'echo "PULLING : $CI_REGISTRY_IMAGE:$MR_BRANCH_NAME"'
