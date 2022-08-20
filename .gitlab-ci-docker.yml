@@ -57,7 +57,7 @@ Dockerfile (custom_branch):
   script:
     - 'echo "PULLING : $CONTAINER_TEST_IMAGE"'
     - 'docker pull $CONTAINER_TEST_IMAGE || true'
-    - 'docker build --cache-from $CONTAINER_TEST_IMAGE --pull -t $CONTAINER_TEST_IMAGE .'
+    - 'docker build $DOCKER_BUILD_ARGS --cache-from $CONTAINER_TEST_IMAGE --pull -t $CONTAINER_TEST_IMAGE .'
     - 'echo "PUSHING : $CONTAINER_TEST_IMAGE"'
     - 'docker push $CONTAINER_TEST_IMAGE'
   dependencies: []
