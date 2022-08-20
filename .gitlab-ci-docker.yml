@@ -81,7 +81,7 @@ Dockerfile (default_branch):
     - 'echo "MERGE REQUEST BRANCH NAME: $MR_BRANCH_NAME"'
     - 'echo "PULLING : $CI_REGISTRY_IMAGE:$MR_BRANCH_NAME"'
     - 'docker pull $CI_REGISTRY_IMAGE:$MR_BRANCH_NAME || true'
-    - 'docker build --cache-from $CI_REGISTRY_IMAGE:$MR_BRANCH_NAME --pull -t $CONTAINER_TEST_IMAGE .'
+    - 'docker build $DOCKER_BUILD_ARGS --cache-from $CI_REGISTRY_IMAGE:$MR_BRANCH_NAME --pull -t $CONTAINER_TEST_IMAGE .'
     - 'echo "PUSHING : $CONTAINER_TEST_IMAGE"'
     - 'docker push $CONTAINER_TEST_IMAGE'
   dependencies: []
@@ -104,7 +104,7 @@ Dockerfile (tag):
     - 'test "$COMMIT_BRANCH_NAME" == "$CI_DEFAULT_BRANCH" && COMMIT_BRANCH_NAME="stable"'
     - 'echo "PULLING : $CI_REGISTRY_IMAGE:$COMMIT_BRANCH_NAME"'
     - 'docker pull $CI_REGISTRY_IMAGE:$COMMIT_BRANCH_NAME || true'
-    - 'docker build --cache-from $CI_REGISTRY_IMAGE:$COMMIT_BRANCH_NAME --pull -t $CONTAINER_TEST_IMAGE .'
+    - 'docker build $DOCKER_BUILD_ARGS --cache-from $CI_REGISTRY_IMAGE:$COMMIT_BRANCH_NAME --pull -t $CONTAINER_TEST_IMAGE .'
     - 'echo "PUSHING : $CONTAINER_TEST_IMAGE"'
     - 'docker push $CONTAINER_TEST_IMAGE'
   dependencies: []
