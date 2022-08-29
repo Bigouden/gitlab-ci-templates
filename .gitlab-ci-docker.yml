@@ -149,6 +149,7 @@ Dive:
     - 'docker pull $CONTAINER_TEST_IMAGE'
     - 'dive $CONTAINER_TEST_IMAGE'
   dependencies: []
+  retry: 2
   variables:
     CI: "true"
 
