@@ -5,7 +5,7 @@ workflow:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
 
 variables:
-  CONTAINER_LATEX_IMAGE: $CI_REGISTRY_IMAGE/bigouden/alpine-latex:daily
+  CONTAINER_LATEX_IMAGE: $CI_REGISTRY/bigouden/alpine-latex:daily
   CONTAINER_SMTP_IMAGE: alpine:latest
 
 Compile:
