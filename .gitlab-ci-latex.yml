@@ -1,11 +1,12 @@
 workflow:
   rules:
-    - if: $CI_MERGE_REQUEST_ID
-    - if: $CI_COMMIT_BRANCH
+    - if: '$CI_COMMIT_BRANCH && $CI_COMMIT_BEFORE_SHA !~ /0{40}/'
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
 
 variables:
-  CONTAINER_LATEX_IMAGE: registry.gitlab.com/bigouden/alpine-latex:latest
-  CONTAINER_SMTP_IMAGE: alpine:edge
+  CONTAINER_LATEX_IMAGE: $CI_REGISTRY_IMAGE/bigouden/alpine-latex:daily
+  CONTAINER_SMTP_IMAGE: alpine:latest
 
 Compile:
   stage: Build
