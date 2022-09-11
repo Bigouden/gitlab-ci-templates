@@ -23,6 +23,7 @@ variables:
   DOCKER_IMAGE: docker:latest
   HADOLINT_IMAGE: hadolint/hadolint:latest-debian
   GIT_DEPTH: 1
+  DOCKER_BUILDKIT: 1
 
 Pylint:
   stage: Quality
