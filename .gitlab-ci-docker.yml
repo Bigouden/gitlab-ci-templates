@@ -1,6 +1,7 @@
 workflow:
   rules:
-    - changes:
+    - if: '$CI_PIPELINE_SOURCE == "pipeline"'
+      changes:
         - README.md
       when: never
     - if: '$CI_COMMIT_BRANCH && $CI_COMMIT_BEFORE_SHA !~ /0{40}/'
