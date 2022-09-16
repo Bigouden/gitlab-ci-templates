@@ -1,5 +1,8 @@
 workflow:
   rules:
+    - changes:
+        - README.md
+      when: never
     - if: '$CI_COMMIT_BRANCH && $CI_COMMIT_BEFORE_SHA !~ /0{40}/'
     - if: '$CI_PIPELINE_SOURCE == "web"'
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
@@ -8,9 +11,6 @@ workflow:
       variables:
         CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG-test
         CONTAINER_VERSION_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
-    - changes:
-        - README.md
-      when: never
 
 default:
   interruptible: true
