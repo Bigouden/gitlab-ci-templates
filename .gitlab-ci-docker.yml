@@ -30,8 +30,7 @@ variables:
   DOCKER_BUILDKIT: 1
 
 include:
-  - project: 'Bigouden/gitlab-ci-templates'
-    file: '.gitlab-ci-secret-detection.yml'
+  - file: '.gitlab-ci-secret-detection.yml'
 
 Pylint:
   stage: Quality
