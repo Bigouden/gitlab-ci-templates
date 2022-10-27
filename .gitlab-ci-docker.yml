@@ -32,6 +32,8 @@ variables:
 include:
   - project: 'Bigouden/gitlab-ci-templates'
     file: '.gitlab-ci-secret-detection.yml'
+  - project: 'Bigouden/gitlab-ci-templates'
+    file: '.gitlab-ci-sast.yml'
 
 
 Pylint:
