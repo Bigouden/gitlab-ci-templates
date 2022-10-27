@@ -11,7 +11,7 @@ variables:
   SCAN_KUBERNETES_MANIFESTS: "false"
 
 sast:
-  stage: test
+  stage: Security
   artifacts:
     reports:
       sast: gl-sast-report.json
