@@ -5,4 +5,4 @@ Semgrep SAST:
   stage: Security
   image: $CONTAINER_SAST_IMAGE
   script: 
-    - semgrep ci --config auto
+    - semgrep ci --config auto --force-color
