@@ -12,6 +12,6 @@ Gitleaks SAST:
 
 Semgrep SAST:
   stage: Security
-  image: $CONTAINER_SAST_IMAGE
+  image: $CONTAINER_SEMGREP_IMAGE
   script: 
     - semgrep ci --config auto --force-color
