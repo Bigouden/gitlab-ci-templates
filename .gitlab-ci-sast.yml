@@ -19,7 +19,7 @@ sast:
     - exit 1
 
 .sast-analyzer:
-  extends: Security
+  extends: sast
   allow_failure: true
   script:
     - /analyzer run
