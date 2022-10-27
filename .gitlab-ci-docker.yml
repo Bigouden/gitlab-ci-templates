@@ -29,6 +29,9 @@ variables:
   GIT_DEPTH: 1
   DOCKER_BUILDKIT: 1
 
+include:
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+
 Pylint:
   stage: Quality
   image: $CONTAINER_CLIENT_IMAGE
