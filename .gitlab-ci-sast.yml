@@ -9,6 +9,8 @@ Gitleaks SAST:
     entrypoint: [""]
   script:
     - gitleaks detect --source . -v
+  variables:
+    GIT_DEPTH: 0
 
 Semgrep SAST:
   stage: Security
