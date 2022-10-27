@@ -4,8 +4,9 @@ variables:
 
 Gitleaks SAST:
   stage: Security
-  image: $CONTAINER_GITLEAKS_IMAGE
-  entrypoint: ["/bin/sh"]
+  image: 
+    name: $CONTAINER_GITLEAKS_IMAGE
+    entrypoint: [""]
   script:
     - gitleaks detect --source . -v
 
