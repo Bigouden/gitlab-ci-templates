@@ -35,7 +35,6 @@ include:
   - project: 'Bigouden/gitlab-ci-templates'
     file: '.gitlab-ci-sast.yml'
 
-
 Pylint:
   stage: Quality
   image: $CONTAINER_CLIENT_IMAGE
