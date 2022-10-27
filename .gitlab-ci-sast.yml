@@ -1,5 +1,12 @@
 variables:
-  CONTAINER_SAST_IMAGE: returntocorp/semgrep
+  CONTAINER_GITLEAKS_IMAGE: zricethezav/gitleaks:latest
+  CONTAINER_SEMGREP_IMAGE: returntocorp/semgrep:latest
+
+Gitleaks SAST:
+  stage: Security
+  image: $CONTAINER_GITLEAKS_IMAGE
+  script:
+    - gitleaks detect --source . -v
 
 Semgrep SAST:
   stage: Security
