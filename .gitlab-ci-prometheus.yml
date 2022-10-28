@@ -1,0 +1,16 @@
+.services:
+  services:
+    - name: $CONTAINER_TEST_IMAGE
+      alias: exporter
+  image: $CONTAINER_CLIENT_IMAGE
+  before_script:
+    - apk add --no-cache --update curl
+  variables:
+    GIT_STRATEGY: none
+  dependencies: []
+
+Prometheus Exporter:
+  stage: Test
+  extends: .services
+  script:
+    - curl http://exporter:8123
