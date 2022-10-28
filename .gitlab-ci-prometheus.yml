@@ -13,4 +13,4 @@ Prometheus Exporter:
   stage: Test
   extends: .services
   script:
-    - curl http://exporter:8123
+    - curl --connect-timeout 60 http://exporter:8123/metrics
