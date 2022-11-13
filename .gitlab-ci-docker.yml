@@ -236,6 +236,8 @@ Gitlab Container Registry (custom branch):
     - 'echo "CONTAINER REGISTRY ID: $CONTAINER_REGISTRY_ID"'
     - 'echo "DELETING: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME-test"'
     - 'curl -k -s --header "PRIVATE-TOKEN: $CI_API_TOKEN" --request DELETE "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$CONTAINER_REGISTRY_ID/tags/$CI_COMMIT_REF_NAME-test"'
+  variables:
+    GIT_STRATEGY: none
   dependencies: []
   retry: 2
   rules:
@@ -258,6 +260,8 @@ Gitlab Container Registry (default branch):
     - 'curl -k -s --header "PRIVATE-TOKEN: $CI_API_TOKEN" --request DELETE "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$CONTAINER_REGISTRY_ID/tags/$CI_COMMIT_REF_NAME-test"'
     - 'echo "DELETING: $CI_REGISTRY_IMAGE:$MR_BRANCH_NAME"'
     - 'curl -k -s --header "PRIVATE-TOKEN: $CI_API_TOKEN" --request DELETE "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$CONTAINER_REGISTRY_ID/tags/$MR_BRANCH_NAME"'
+  variables:
+    GIT_STRATEGY: none
   dependencies: []
   retry: 2
   rules:
@@ -274,6 +278,8 @@ Gitlab Container Registry (tag):
     - 'echo "CONTAINER REGISTRY ID: $CONTAINER_REGISTRY_ID"'
     - 'echo "DELETING: $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG-test"'
     - 'curl -k -s --header "PRIVATE-TOKEN: $CI_API_TOKEN" --request DELETE "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$CONTAINER_REGISTRY_ID/tags/$CI_COMMIT_TAG-test"'
+  variables:
+    GIT_STRATEGY: none
   dependencies: []
   retry: 2
   rules:
