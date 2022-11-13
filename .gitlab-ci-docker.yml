@@ -7,8 +7,7 @@ workflow:
     - if: '$CI_COMMIT_BRANCH && $CI_COMMIT_BEFORE_SHA !~ /0{40}/'
       changes:
         - "**/*.md"
-      when: manual
-      allow_failure: true
+      when: never
     - if: '$CI_PIPELINE_SOURCE == "web"'
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
     - if: '$CI_PIPELINE_SOURCE == "pipeline"'
