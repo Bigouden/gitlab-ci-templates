@@ -17,6 +17,19 @@ Pylint:
     - exists:
         - "**/*.py"
 
+Shellcheck:
+  stage: Quality
+  needs: []
+  image: $CONTAINER_CLIENT_IMAGE
+  before_script:
+    - apk add --no-cache --update shellcheck
+  dependencies: []
+  script:
+    - find . -type f -name "*.py" | xargs shellcheck 
+  rules:
+    - exists:
+        - "**/*.sh"
+
 Gitleaks:
   stage: Security
   needs: []
