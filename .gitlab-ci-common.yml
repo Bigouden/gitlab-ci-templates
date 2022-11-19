@@ -25,7 +25,7 @@ Shellcheck:
     - apk add --no-cache --update shellcheck
   dependencies: []
   script:
-    - find . -type f -name "*.py" | xargs shellcheck 
+    - find . -type f -name "*.sh" | xargs shellcheck 
   rules:
     - exists:
         - "**/*.sh"
