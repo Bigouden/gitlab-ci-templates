@@ -18,7 +18,7 @@ Pylint:
         - "**/*.py"
 
 Shellcheck:
-  stage: Quality
+  stage: Security
   needs: []
   image: $CONTAINER_CLIENT_IMAGE
   before_script:
