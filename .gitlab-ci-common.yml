@@ -9,8 +9,9 @@ variables:
 Ansible Lint:
   stage: Quality
   needs: []
-  image: $CONTAINER_ANSIBLE_IMAGE
-  entrypoint: ['']
+  image: 
+    name: $CONTAINER_ANSIBLE_IMAGE
+    entrypoint: ['']
   script:
     - ansible-lint
   rules:
