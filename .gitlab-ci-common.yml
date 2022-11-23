@@ -2,6 +2,21 @@ variables:
   CONTAINER_CLIENT_IMAGE: alpine:latest
   CONTAINER_GITLEAKS_IMAGE: zricethezav/gitleaks:latest
   CONTAINER_SEMGREP_IMAGE: returntocorp/semgrep:latest
+  CONTAINER_ANSIBLE_IMAGE: $CI_REGISTRY/bigouden/alpine-ansible:daily
+  GIT_DEPTH: 1
+  FF_DISABLE_UMASK_FOR_DOCKER_EXECUTOR: "true"
+
+Ansible Lint:
+  stage: Quality
+  needs: []
+  image: $CONTAINER_ANSIBLE_IMAGE
+  entrypoint: ['']
+  script:
+    - ansible-lint
+  rules:
+    - exists:
+        - "**/ansible.cfg"
+        - "**/hosts"
 
 Pylint:
   stage: Quality
