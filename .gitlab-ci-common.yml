@@ -4,7 +4,6 @@ variables:
   CONTAINER_SEMGREP_IMAGE: returntocorp/semgrep:latest
   CONTAINER_ANSIBLE_IMAGE: $CI_REGISTRY/bigouden/alpine-ansible:daily
   GIT_DEPTH: 1
-  FF_DISABLE_UMASK_FOR_DOCKER_EXECUTOR: "true"
 
 Ansible Lint:
   stage: Quality
@@ -14,6 +13,8 @@ Ansible Lint:
     entrypoint: ['']
   script:
     - ansible-lint
+  variables:
+    FF_DISABLE_UMASK_FOR_DOCKER_EXECUTOR: "true"
   rules:
     - exists:
         - "**/ansible.cfg"
