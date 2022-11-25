@@ -28,7 +28,7 @@ Ansible Later:
     name: $CONTAINER_ANSIBLE_LATER_IMAGE
     entrypoint: ['']
   script:
-    - ansible-later **/*
+    - ansible-later **/*.yml
   rules:
     - exists:
         - "**/ansible.cfg"
