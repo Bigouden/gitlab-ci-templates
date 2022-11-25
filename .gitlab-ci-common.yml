@@ -20,6 +20,8 @@ Ansible Lint:
     - exists:
         - "**/ansible.cfg"
         - "**/hosts"
+        - "**/.ansible-lint"
+        - "**/.later.yml"
 
 Ansible Later:
   stage: Quality
@@ -33,6 +35,23 @@ Ansible Later:
     - exists:
         - "**/ansible.cfg"
         - "**/hosts"
+        - "**/.ansible-lint"
+        - "**/.later.yml"
+
+Kics:
+  stage: Security
+  needs: []
+  image: 
+    name: $CONTAINER_KICKS_IMAGE
+    entrypoint: ['']
+  script:
+    - kics scan -p .
+  rules:
+    - exists:
+        - "**/ansible.cfg"
+        - "**/hosts"
+        - "**/.ansible-lint"
+        - "**/.later.yml"
 
 Pylint:
   stage: Quality
