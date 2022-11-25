@@ -4,6 +4,8 @@ variables:
   CONTAINER_SEMGREP_IMAGE: returntocorp/semgrep:latest
   CONTAINER_ANSIBLE_IMAGE: $CI_REGISTRY/bigouden/alpine-ansible:daily
   CONTAINER_ANSIBLE_LATER_IMAGE: thegeeklab/ansible-later:latest
+  CONTAINER_KICS_IMAGE: checkmarx/kics:latest
+  CONTAINER_TRIVY_IMAGE: aquasec/trivy:latest
   GIT_DEPTH: 1
 
 Ansible Lint:
@@ -42,7 +44,7 @@ Kics:
   stage: Security
   needs: []
   image: 
-    name: $CONTAINER_KICKS_IMAGE
+    name: $CONTAINER_KICS_IMAGE
     entrypoint: ['']
   script:
     - kics scan -p .
@@ -52,6 +54,18 @@ Kics:
         - "**/hosts"
         - "**/.ansible-lint"
         - "**/.later.yml"
+
+Trivy Configuration:
+  stage: Security
+  needs: []
+  image:
+    name: $CONTAINER_TRIVY_IMAGE
+    entrypoint: ['']
+  script:
+    - trivy config .
+  rules:
+    - exists:
+        - "**/Dockerfile"
 
 Pylint:
   stage: Quality
