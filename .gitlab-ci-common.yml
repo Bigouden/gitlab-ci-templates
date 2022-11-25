@@ -3,6 +3,7 @@ variables:
   CONTAINER_GITLEAKS_IMAGE: zricethezav/gitleaks:latest
   CONTAINER_SEMGREP_IMAGE: returntocorp/semgrep:latest
   CONTAINER_ANSIBLE_IMAGE: $CI_REGISTRY/bigouden/alpine-ansible:daily
+  CONTAINER_ANSIBLE_LATER_IMAGE: thegeeklab/ansible-later:later
   GIT_DEPTH: 1
 
 Ansible Lint:
@@ -15,6 +16,19 @@ Ansible Lint:
     - ansible-lint
   variables:
     FF_DISABLE_UMASK_FOR_DOCKER_EXECUTOR: "true"
+  rules:
+    - exists:
+        - "**/ansible.cfg"
+        - "**/hosts"
+
+Ansible Later:
+  stage: Quality
+  needs: []
+  image: 
+    name: $CONTAINER_ANSIBLE_LATER_IMAGE
+    entrypoint: ['']
+  script:
+    - ansible-later **/*
   rules:
     - exists:
         - "**/ansible.cfg"
