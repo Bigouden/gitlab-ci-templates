@@ -3,7 +3,7 @@ variables:
   CONTAINER_GITLEAKS_IMAGE: zricethezav/gitleaks:latest
   CONTAINER_SEMGREP_IMAGE: returntocorp/semgrep:latest
   CONTAINER_ANSIBLE_IMAGE: $CI_REGISTRY/bigouden/alpine-ansible:daily
-  CONTAINER_ANSIBLE_LATER_IMAGE: thegeeklab/ansible-later:later
+  CONTAINER_ANSIBLE_LATER_IMAGE: thegeeklab/ansible-later:latest
   GIT_DEPTH: 1
 
 Ansible Lint:
