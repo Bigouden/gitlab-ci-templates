@@ -149,6 +149,13 @@ Dive:
 
 Anchore:
   stage: Inspect
+    needs:
+    - job: Dockerfile (custom_branch)
+      optional: true
+    - job: Dockerfile (default_branch)
+      optional: true
+    - job: Dockerfile (tag)
+      optional: true
   image: 
     name: $ANCHORE_IMAGE
   services:
@@ -169,18 +176,21 @@ Anchore:
 
 Trivy Image:
   stage: Inspect
+    needs:
+    - job: Dockerfile (custom_branch)
+      optional: true
+    - job: Dockerfile (default_branch)
+      optional: true
+    - job: Dockerfile (tag)
+      optional: true
   image:
     name: $CONTAINER_TRIVY_IMAGE
     entrypoint: ['']
   before_script:
     - 'trivy image --download-db-only --insecure'
   script:
-    - trivy image --exit-code 0 "$CONTAINER_TEST_IMAGE"
     - trivy image --exit-code 1 --severity CRITICAL "$CONTAINER_TEST_IMAGE"
   allow_failure: true
-  cache:
-    paths:
-      - .trivycache/
   variables:
     TRIVY_USERNAME: "$CI_REGISTRY_USER"
     TRIVY_PASSWORD: "$CI_REGISTRY_PASSWORD"
