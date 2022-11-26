@@ -149,7 +149,7 @@ Dive:
 
 Anchore:
   stage: Inspect
-    needs:
+  needs:
     - job: Dockerfile (custom_branch)
       optional: true
     - job: Dockerfile (default_branch)
@@ -177,7 +177,7 @@ Anchore:
 
 Trivy Image:
   stage: Inspect
-    needs:
+  needs:
     - job: Dockerfile (custom_branch)
       optional: true
     - job: Dockerfile (default_branch)
