@@ -67,6 +67,19 @@ Trivy Configuration:
     - exists:
         - "**/Dockerfile"
 
+Trivy Repository:
+  stage: Security
+  needs: []
+  image:
+    name: $CONTAINER_TRIVY_IMAGE
+    entrypoint: ['']
+  before_script:
+    - 'trivy repo --download-db-only --insecure'
+  script:
+    - trivy repo --exit-code 1 --severity CRITICAL "$CI_REPOSITORY_URL"
+  variables:
+    GIT_STRATEGY: none
+
 Pylint:
   stage: Quality
   needs: []
