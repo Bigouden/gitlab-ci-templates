@@ -78,6 +78,7 @@ Trivy Repository:
   script:
     - trivy repo --exit-code 1 --severity CRITICAL "$CI_REPOSITORY_URL"
   variables:
+    TRIVY_NO_PROGRESS: "true"
     GIT_STRATEGY: none
 
 Pylint:
