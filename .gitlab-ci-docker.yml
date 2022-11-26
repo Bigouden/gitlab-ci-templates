@@ -58,7 +58,7 @@ Dockerfile (custom_branch):
   rules:
     - if: '$CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null'
       exists:
-        - Dockerfile
+        - "**/Dockerfile"
 
 # $CI_API_TOKEN (API read right) mandatory to retrieve MR branch name !
 Dockerfile (default_branch):
@@ -82,7 +82,7 @@ Dockerfile (default_branch):
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       exists:
-        - Dockerfile
+        - "**/Dockerfile"
 
 # $CI_API_TOKEN (API read right) mandatory to retrieve MR branch name !
 Dockerfile (tag):
@@ -105,7 +105,7 @@ Dockerfile (tag):
   rules:
     - if: '$CI_COMMIT_TAG'
       exists:
-        - Dockerfile
+        - "**/Dockerfile"
 
 RootFS:
   stage: Build
@@ -122,7 +122,7 @@ RootFS:
   retry: 2
   rules:
     - exists:
-      - build.sh
+      - "**/build.sh"
 
 Dive:
   stage: Inspect
