@@ -19,6 +19,7 @@ default:
 variables:
   ANCHORE_IMAGE: anchore/inline-scan:latest
   CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME-test
+  CONTAINER_TRIVY_IMAGE: aquasec/trivy:latest
   CONTAINER_VERSION_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
   DIVE_IMAGE: wagoodman/dive:latest
   DOCKER_IMAGE: docker:latest
@@ -165,7 +166,28 @@ Anchore:
     ANCHORE_CLI_URL: "http://anchore-engine:8228/v1"
     GIT_STRATEGY: none
   dependencies: []
-  when: manual
+
+Trivy Image:
+  stage: Inspect
+  image:
+    name: $CONTAINER_TRIVY_IMAGE
+    entrypoint: ['']
+  before_script:
+    - 'trivy image --download-db-only --insecure'
+  script:
+    - trivy image --exit-code 0 "$CONTAINER_TEST_IMAGE"
+    - trivy image --exit-code 1 --severity CRITICAL "$CONTAINER_TEST_IMAGE"
+  allow_failure: true
+  cache:
+    paths:
+      - .trivycache/
+  variables:
+    TRIVY_USERNAME: "$CI_REGISTRY_USER"
+    TRIVY_PASSWORD: "$CI_REGISTRY_PASSWORD"
+    TRIVY_AUTH_URL: "$CI_REGISTRY"
+    TRIVY_NO_PROGRESS: "true"
+    TRIVY_CACHE_DIR: ".trivycache/"
+    GIT_STRATEGY: none
 
 Gitlab:
   stage: Release
