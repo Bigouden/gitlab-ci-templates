@@ -173,6 +173,7 @@ Anchore:
     ANCHORE_CLI_URL: "http://anchore-engine:8228/v1"
     GIT_STRATEGY: none
   dependencies: []
+  when: manual
 
 Trivy Image:
   stage: Inspect
