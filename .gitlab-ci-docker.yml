@@ -228,6 +228,28 @@ Grype:
     GRYPE_REGISTRY_INSECURE_SKIP_TLS_VERIFY: "true"
     GIT_STRATEGY: none
 
+Syft:
+  stage: Inspect
+  needs:
+    - job: Dockerfile (custom_branch)
+      optional: true
+    - job: Dockerfile (default_branch)
+      optional: true
+    - job: Dockerfile (tag)
+      optional: true
+  image:
+    name: $CONTAINER_SYFT_IMAGE
+    entrypoint: ['']
+  script:
+    - 'syft packages --scope all-layers "$CONTAINER_TEST_IMAGE"'
+  allow_failure: true
+  variables:
+    SYFT_REGISTRY_AUTH_USERNAME: "$CI_REGISTRY_USER"
+    SYFT_REGISTRY_AUTH_PASSWORD: "$CI_REGISTRY_PASSWORD"
+    SYFT_REGISTRY_AUTH_AUTHORITY: "$CI_REGISTRY"
+    SYFT_REGISTRY_INSECURE_SKIP_TLS_VERIFY: "true"
+    GIT_STRATEGY: none
+
 Gitlab:
   stage: Release
   image: $DOCKER_IMAGE
