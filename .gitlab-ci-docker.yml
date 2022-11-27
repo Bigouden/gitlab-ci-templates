@@ -41,7 +41,7 @@ Hadolint:
     CI_DEBUG_TRACE: "true"
   rules:
     - exists:
-        - Dockerfile
+        - "**/Dockerfile"
 
 Dockerfile (custom_branch):
   stage: Build
