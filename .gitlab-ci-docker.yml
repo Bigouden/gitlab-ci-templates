@@ -190,14 +190,15 @@ Trivy Image:
   before_script:
     - 'trivy image --download-db-only --insecure'
   script:
-    - trivy image --exit-code 1 --severity CRITICAL "$CONTAINER_TEST_IMAGE"
+    - trivy image "$CONTAINER_TEST_IMAGE"
   allow_failure: true
   variables:
     TRIVY_USERNAME: "$CI_REGISTRY_USER"
     TRIVY_PASSWORD: "$CI_REGISTRY_PASSWORD"
     TRIVY_AUTH_URL: "$CI_REGISTRY"
     TRIVY_NO_PROGRESS: "true"
-    TRIVY_CACHE_DIR: ".trivycache/"
+    TRIVY_INSECURE: "true"
+    TRIVY_EXIT_CODE: "1"
     GIT_STRATEGY: none
 
 Gitlab:
