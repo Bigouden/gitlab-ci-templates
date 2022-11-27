@@ -199,6 +199,7 @@ Trivy Image:
     TRIVY_NO_PROGRESS: "true"
     TRIVY_INSECURE: "true"
     TRIVY_EXIT_CODE: "1"
+    TRIVY_SEVERITY: "CRITICAL"
     GIT_STRATEGY: none
 
 Gitlab:
