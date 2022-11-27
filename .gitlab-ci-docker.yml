@@ -190,7 +190,7 @@ Trivy Image:
   before_script:
     - 'trivy image --download-db-only'
   script:
-    - trivy image "$CONTAINER_TEST_IMAGE"
+    - 'trivy image "$CONTAINER_TEST_IMAGE"'
   allow_failure: true
   variables:
     TRIVY_USERNAME: "$CI_REGISTRY_USER"
@@ -200,6 +200,31 @@ Trivy Image:
     TRIVY_INSECURE: "true"
     TRIVY_EXIT_CODE: "1"
     TRIVY_SEVERITY: "CRITICAL"
+    GIT_STRATEGY: none
+
+Grype:
+  stage: Inspect
+  needs:
+    - job: Dockerfile (custom_branch)
+      optional: true
+    - job: Dockerfile (default_branch)
+      optional: true
+    - job: Dockerfile (tag)
+      optional: true
+  image:
+    name: $CONTAINER_GRYPE_IMAGE
+    entrypoint: ['']
+  before_script:
+    - 'grype db update'
+  script:
+    - 'grype --scope all-layers "$CONTAINER_TEST_IMAGE"'
+  allow_failure: true
+  variables:
+    GRYPE_FAIL_ON_SEVERITY: "critical"
+    GRYPE_REGISTRY_AUTH_USERNAME: "$CI_REGISTRY_USER"
+    GRYPE_REGISTRY_AUTH_PASSWORD: "$CI_REGISTRY_PASSWORD"
+    GRYPE_REGISTRY_AUTH_AUTHORITY: "$CI_REGISTRY"
+    GRYPE_REGISTRY_INSECURE_SKIP_TLS_VERIFY: "true"
     GIT_STRATEGY: none
 
 Gitlab:
