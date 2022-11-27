@@ -78,7 +78,7 @@ Trivy Repository:
     name: $CONTAINER_TRIVY_IMAGE
     entrypoint: ['']
   before_script:
-    - 'trivy repo --download-db-only --insecure'
+    - 'trivy repo --download-db-only'
   script:
     - trivy repo "$CI_REPOSITORY_URL"
 
