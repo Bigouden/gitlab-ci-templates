@@ -63,6 +63,10 @@ Trivy Configuration:
     entrypoint: ['']
   script:
     - trivy config .
+  variables:
+    TRIVY_NO_PROGRESS: "true"
+    TRIVY_INSECURE: "true"
+    TRIVY_EXIT_CODE: "1"
   rules:
     - exists:
         - "**/Dockerfile"
@@ -76,9 +80,11 @@ Trivy Repository:
   before_script:
     - 'trivy repo --download-db-only --insecure'
   script:
-    - trivy repo --exit-code 1 --severity CRITICAL "$CI_REPOSITORY_URL"
+    - trivy repo "$CI_REPOSITORY_URL"
   variables:
     TRIVY_NO_PROGRESS: "true"
+    TRIVY_INSECURE: "true"
+    TRIVY_EXIT_CODE: "1"
     GIT_STRATEGY: none
 
 Pylint:
