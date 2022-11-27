@@ -18,6 +18,7 @@ default:
 
 variables:
   ANCHORE_IMAGE: anchore/inline-scan:latest
+  CONTAINER_GRYPE_IMAGE:  $CI_REGISTRY/bigouden/alpine-grype:daily
   CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME-test
   CONTAINER_TRIVY_IMAGE: aquasec/trivy:latest
   CONTAINER_VERSION_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
