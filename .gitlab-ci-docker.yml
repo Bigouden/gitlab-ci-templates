@@ -188,7 +188,7 @@ Trivy Image:
     name: $CONTAINER_TRIVY_IMAGE
     entrypoint: ['']
   before_script:
-    - 'trivy image --download-db-only --insecure'
+    - 'trivy image --download-db-only'
   script:
     - trivy image "$CONTAINER_TEST_IMAGE"
   allow_failure: true
