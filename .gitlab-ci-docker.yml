@@ -315,7 +315,7 @@ Gitlab Container Registry (custom_branch):
   needs:
     - job: Gitlab
     - job: DockerHub
-      optionnl: true
+      optional: true
   image: $DOCKER_IMAGE
   before_script:
     - 'apk add --no-cache --update curl jq'
