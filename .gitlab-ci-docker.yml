@@ -46,7 +46,7 @@ Hadolint:
         - "**/Dockerfile"
 
 # CUSTOM BRANCH
-Dockerfile:
+Dockerfile (custom_branch):
   stage: Build
   image: $DOCKER_IMAGE
   before_script:
@@ -72,7 +72,7 @@ Dockerfile:
 
 # $CI_API_TOKEN (API read right) mandatory to retrieve MR branch name !
 # DEFAULT BRANCH
-Dockerfile:
+Dockerfile (default_branch):
   stage: Build
   image: $DOCKER_IMAGE
   before_script:
@@ -103,7 +103,7 @@ Dockerfile:
 
 # $CI_API_TOKEN (API read right) mandatory to retrieve MR branch name !
 # TAG
-Dockerfile:
+Dockerfile (tag):
   stage: Build
   image: $DOCKER_IMAGE
   before_script:
@@ -310,7 +310,7 @@ DockerHub:
 
 # $CI_API_TOKEN (API write right) mandatory to delete container registry tag !
 # CLEAN CUSTOM BRANCH
-Gitlab Container Registry:
+Gitlab Container Registry (custom_branch):
   stage: Clean
   needs:
     - job: Gitlab
@@ -334,7 +334,7 @@ Gitlab Container Registry:
 
 # $CI_API_TOKEN (API write right) mandatory to delete container registry tag !
 # CLEAN DEFAULT BRANCH
-Gitlab Container Registry:
+Gitlab Container Registry (default_branch):
   stage: Clean
   needs:
     - job: Gitlab
@@ -364,7 +364,7 @@ Gitlab Container Registry:
 
 # $CI_API_TOKEN (API write right) mandatory to delete container registry tag !
 # CLEAN TAG
-Gitlab Container Registry:
+Gitlab Container Registry (tag):
   stage: Clean
   image: $DOCKER_IMAGE
   before_script:
