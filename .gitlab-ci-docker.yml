@@ -151,7 +151,11 @@ RootFS:
 Dive:
   stage: Inspect
   needs:
-    - job: Dockerfile
+    - job: Dockerfile (custom_branch)
+      optional: true
+    - job: Dockerfile (default_branch)
+      optional: true
+    - job: Dockerfile (tag)
       optional: true
   before_script:
     - 'docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY'
@@ -169,8 +173,12 @@ Dive:
 Anchore:
   stage: Inspect
   needs:
-    - job: Dockerfile
-      optional: true      
+    - job: Dockerfile (custom_branch)
+      optional: true
+    - job: Dockerfile (default_branch)
+      optional: true
+    - job: Dockerfile (tag)
+      optional: true
   image: 
     name: $ANCHORE_IMAGE
   services:
@@ -193,7 +201,11 @@ Anchore:
 Trivy Image:
   stage: Inspect
   needs:
-    - job: Dockerfile
+    - job: Dockerfile (custom_branch)
+      optional: true
+    - job: Dockerfile (default_branch)
+      optional: true
+    - job: Dockerfile (tag)
       optional: true
   image:
     name: $CONTAINER_TRIVY_IMAGE
@@ -216,7 +228,11 @@ Trivy Image:
 Grype:
   stage: Inspect
   needs:
-    - job: Dockerfile
+    - job: Dockerfile (custom_branch)
+      optional: true
+    - job: Dockerfile (default_branch)
+      optional: true
+    - job: Dockerfile (tag)
       optional: true
   image:
     name: $CONTAINER_GRYPE_IMAGE
@@ -237,7 +253,11 @@ Grype:
 Syft:
   stage: Inspect
   needs:
-    - job: Dockerfile
+    - job: Dockerfile (custom_branch)
+      optional: true
+    - job: Dockerfile (default_branch)
+      optional: true
+    - job: Dockerfile (tag)
       optional: true
   image:
     name: $CONTAINER_SYFT_IMAGE
