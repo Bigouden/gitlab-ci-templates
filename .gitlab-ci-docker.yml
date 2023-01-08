@@ -152,6 +152,7 @@ Dive:
   stage: Inspect
   needs:
     - job: Dockerfile
+      optional: true
   before_script:
     - 'docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY'
   image: 
@@ -169,6 +170,7 @@ Anchore:
   stage: Inspect
   needs:
     - job: Dockerfile
+      optional: true      
   image: 
     name: $ANCHORE_IMAGE
   services:
@@ -192,6 +194,7 @@ Trivy Image:
   stage: Inspect
   needs:
     - job: Dockerfile
+      optional: true
   image:
     name: $CONTAINER_TRIVY_IMAGE
     entrypoint: ['']
@@ -214,6 +217,7 @@ Grype:
   stage: Inspect
   needs:
     - job: Dockerfile
+      optional: true
   image:
     name: $CONTAINER_GRYPE_IMAGE
     entrypoint: ['']
@@ -234,6 +238,7 @@ Syft:
   stage: Inspect
   needs:
     - job: Dockerfile
+      optional: true
   image:
     name: $CONTAINER_SYFT_IMAGE
     entrypoint: ['']
