@@ -58,17 +58,20 @@ Dockerfile (custom_branch):
     - 'docker build $DOCKER_BUILD_ARGS --pull -t $CONTAINER_TEST_IMAGE .'
     - 'echo "PUSHING : $CONTAINER_TEST_IMAGE"'
     - 'docker push $CONTAINER_TEST_IMAGE'
-  variables:
-    DOCKER_BUILD_ARGS: "--cache-from $CONTAINER_TEST_IMAGE"
   dependencies: []
   retry: 2
   rules:
-    - if: '$CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null'
+    - if: '$CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null && $DOCKER_BUILD_NOCACHE == null'
+      variables:
+        DOCKER_BUILD_ARGS: "--cache-from $CONTAINER_TEST_IMAGE"
       exists:
         - "**/Dockerfile"
-    - if: '$DOCKER_BUILD_NO_CACHE'
+    - if: '$CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null && $DOCKER_BUILD_NOCACHE'
       variables:
         DOCKER_BUILD_ARGS: "--no-cache"
+      exists:
+        - "**/Dockerfile"
+
 
 # $CI_API_TOKEN (API read right) mandatory to retrieve MR branch name !
 # DEFAULT BRANCH
@@ -89,17 +92,19 @@ Dockerfile (default_branch):
     - 'docker build $DOCKER_BUILD_ARGS --pull -t $CONTAINER_TEST_IMAGE .'
     - 'echo "PUSHING : $CONTAINER_TEST_IMAGE"'
     - 'docker push $CONTAINER_TEST_IMAGE'
-  variables:
-    DOCKER_BUILD_ARGS: "--cache-from $CI_REGISTRY_IMAGE:$MR_BRANCH_NAME"
   dependencies: []
   retry: 2
   rules:
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $DOCKER_BUILD_NOCACHE == null'
+      variables:
+        DOCKER_BUILD_ARGS: "--cache-from $CI_REGISTRY_IMAGE:$MR_BRANCH_NAME"
       exists:
         - "**/Dockerfile"
-    - if: '$DOCKER_BUILD_NO_CACHE'
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $DOCKER_BUILD_NOCACHE'
       variables:
         DOCKER_BUILD_ARGS: "--no-cache"
+      exists:
+        - "**/Dockerfile"
 
 # $CI_API_TOKEN (API read right) mandatory to retrieve MR branch name !
 # TAG
@@ -119,17 +124,19 @@ Dockerfile (tag):
     - 'docker build $DOCKER_BUILD_ARGS --pull -t $CONTAINER_TEST_IMAGE .'
     - 'echo "PUSHING : $CONTAINER_TEST_IMAGE"'
     - 'docker push $CONTAINER_TEST_IMAGE'
-  variables:
-    DOCKER_BUILD_ARGS: "--cache-from $CI_REGISTRY_IMAGE:$COMMIT_BRANCH_NAME"
   dependencies: []
   retry: 2
   rules:
-    - if: '$CI_COMMIT_TAG'
+    - if: '$CI_COMMIT_TAG && $DOCKER_BUILD_NOCACHE == null'
+      variables:
+        DOCKER_BUILD_ARGS: "--cache-from $CI_REGISTRY_IMAGE:$COMMIT_BRANCH_NAME"
       exists:
         - "**/Dockerfile"
-    - if: '$DOCKER_BUILD_NO_CACHE'
+    - if: '$CI_COMMIT_TAG && $DOCKER_BUILD_NOCACHE'
       variables:
         DOCKER_BUILD_ARGS: "--no-cache"
+      exists:
+        - "**/Dockerfile"
 
 RootFS:
   stage: Build
