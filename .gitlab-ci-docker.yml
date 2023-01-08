@@ -53,6 +53,7 @@ Dockerfile (custom_branch):
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - 'echo "BUILD MODE : CUSTOM BRANCH"'
+    - 'echo "BUILD ARGS : $DOCKER_BUILD_ARGS"'
     - 'echo "PULLING : $CONTAINER_TEST_IMAGE"'
     - 'docker pull $CONTAINER_TEST_IMAGE || true'
     - 'docker build $DOCKER_BUILD_ARGS --pull -t $CONTAINER_TEST_IMAGE .'
@@ -83,6 +84,7 @@ Dockerfile (default_branch):
     - 'apk add --no-cache --update curl jq'
   script:
     - 'echo "BUILD MODE : DEFAULT BRANCH"'
+    - 'echo "BUILD ARGS : $DOCKER_BUILD_ARGS"'
     - 'MR_BRANCH_LAST_COMMIT_SHA=$(curl -k -s --header "PRIVATE-TOKEN: $CI_API_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/repository/commits/$CI_COMMIT_SHA" | jq -r ".parent_ids  | .[-1]")'
     - 'echo MERGE REQUEST BRANCH LAST COMMIT SHA: $MR_BRANCH_LAST_COMMIT_SHA'
     - 'MR_BRANCH_NAME=$(curl -k -s --header "PRIVATE-TOKEN: $CI_API_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/repository/commits/$MR_BRANCH_LAST_COMMIT_SHA/merge_requests" | jq -r ".[0].source_branch")'
@@ -116,6 +118,7 @@ Dockerfile (tag):
     - 'apk add --no-cache --update curl jq'
   script:
     - 'echo "BUILD MODE : TAG"'
+    - 'echo "BUILD ARGS : $DOCKER_BUILD_ARGS"'
     - 'COMMIT_BRANCH_NAME=$(curl -k -s --header "PRIVATE-TOKEN: $CI_API_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/repository/commits/$CI_COMMIT_SHA/refs?type=branch" |  jq -r ".[0].name")'
     - 'echo "COMMIT BRANCH NAME: $COMMIT_BRANCH_NAME"'
     - 'test "$COMMIT_BRANCH_NAME" == "$CI_DEFAULT_BRANCH" && COMMIT_BRANCH_NAME="stable"'
