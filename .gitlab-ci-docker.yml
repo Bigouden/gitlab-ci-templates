@@ -91,6 +91,26 @@ Dockerfile:
       exists:
         - "**/Dockerfile"
 
+# DEFAULT BRANCH WITHOUT CACHE
+Dockerfile:
+  stage: Build
+  image: $DOCKER_IMAGE
+  before_script:
+    - 'docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY'
+    - 'apk add --no-cache --update curl jq'
+  script:
+    - 'echo "BUILD MODE : DEFAULT BRANCH WITHOUT CACHE"'
+    - 'docker build $DOCKER_BUILD_ARGS --no-cache --pull -t $CONTAINER_TEST_IMAGE .'
+    - 'echo "PUSHING : $CONTAINER_TEST_IMAGE"'
+    - 'docker push $CONTAINER_TEST_IMAGE'
+  dependencies: []
+  retry: 2
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+      exists:
+        - "**/Dockerfile"
+
+
 # $CI_API_TOKEN (API read right) mandatory to retrieve MR branch name !
 # TAG
 Dockerfile:
@@ -136,12 +156,7 @@ RootFS:
 Dive:
   stage: Inspect
   needs:
-    - job: Dockerfile (custom_branch)
-      optional: true
-    - job: Dockerfile (default_branch)
-      optional: true
-    - job: Dockerfile (tag)
-      optional: true
+    - job: Dockerfile
   before_script:
     - 'docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY'
   image: 
@@ -158,12 +173,7 @@ Dive:
 Anchore:
   stage: Inspect
   needs:
-    - job: Dockerfile (custom_branch)
-      optional: true
-    - job: Dockerfile (default_branch)
-      optional: true
-    - job: Dockerfile (tag)
-      optional: true
+    - job: Dockerfile
   image: 
     name: $ANCHORE_IMAGE
   services:
@@ -186,12 +196,7 @@ Anchore:
 Trivy Image:
   stage: Inspect
   needs:
-    - job: Dockerfile (custom_branch)
-      optional: true
-    - job: Dockerfile (default_branch)
-      optional: true
-    - job: Dockerfile (tag)
-      optional: true
+    - job: Dockerfile
   image:
     name: $CONTAINER_TRIVY_IMAGE
     entrypoint: ['']
@@ -213,12 +218,7 @@ Trivy Image:
 Grype:
   stage: Inspect
   needs:
-    - job: Dockerfile (custom_branch)
-      optional: true
-    - job: Dockerfile (default_branch)
-      optional: true
-    - job: Dockerfile (tag)
-      optional: true
+    - job: Dockerfile
   image:
     name: $CONTAINER_GRYPE_IMAGE
     entrypoint: ['']
@@ -238,12 +238,7 @@ Grype:
 Syft:
   stage: Inspect
   needs:
-    - job: Dockerfile (custom_branch)
-      optional: true
-    - job: Dockerfile (default_branch)
-      optional: true
-    - job: Dockerfile (tag)
-      optional: true
+    - job: Dockerfile
   image:
     name: $CONTAINER_SYFT_IMAGE
     entrypoint: ['']
@@ -314,12 +309,18 @@ DockerHub:
         DOCKER_HUB_VERSION_IMAGE: $DOCKER_HUB_USER/$CI_PROJECT_NAME:$CI_COMMIT_TAG
 
 # $CI_API_TOKEN (API write right) mandatory to delete container registry tag !
-Gitlab Container Registry (custom branch):
+# CLEAN CUSTOM BRANCH
+Gitlab Container Registry:
   stage: Clean
+  needs:
+    - job: Gitlab
+    - job: DockerHub
+      optionnl: true
   image: $DOCKER_IMAGE
   before_script:
     - 'apk add --no-cache --update curl jq'
   script:
+    - 'echo "CLEAN MODE : CUSTOM_BRANCH"'
     - 'CONTAINER_REGISTRY_ID=$(curl -k -s --header "PRIVATE-TOKEN: $CI_API_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories" | jq -r ".[0].id")'
     - 'echo "CONTAINER REGISTRY ID: $CONTAINER_REGISTRY_ID"'
     - 'echo "DELETING: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME-test"'
@@ -332,12 +333,18 @@ Gitlab Container Registry (custom branch):
     - if: '$CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG == null'
 
 # $CI_API_TOKEN (API write right) mandatory to delete container registry tag !
-Gitlab Container Registry (default branch):
+# CLEAN DEFAULT BRANCH
+Gitlab Container Registry:
   stage: Clean
+  needs:
+    - job: Gitlab
+    - job: DockerHub
+      optionnl: true
   image: $DOCKER_IMAGE
   before_script:
     - apk add --no-cache --update curl jq
   script:
+    - 'echo "CLEAN MODE : DEFAULT BRANCH"'
     - 'CONTAINER_REGISTRY_ID=$(curl -k -s --header "PRIVATE-TOKEN: $CI_API_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories" | jq -r ".[0].id")'
     - 'echo "CONTAINER REGISTRY ID: $CONTAINER_REGISTRY_ID"'
     - 'MR_BRANCH_LAST_COMMIT_SHA=$(curl -k -s --header "PRIVATE-TOKEN: $CI_API_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/repository/commits/$CI_COMMIT_SHA" | jq -r ".parent_ids  | .[-1]")'
@@ -356,12 +363,14 @@ Gitlab Container Registry (default branch):
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
 
 # $CI_API_TOKEN (API write right) mandatory to delete container registry tag !
-Gitlab Container Registry (tag):
+# CLEAN TAG
+Gitlab Container Registry:
   stage: Clean
   image: $DOCKER_IMAGE
   before_script:
     - 'apk add --no-cache --update curl jq'
   script:
+    - 'echo "CLEAN MODE : TAG"'
     - 'CONTAINER_REGISTRY_ID=$(curl -k -s --header "PRIVATE-TOKEN: $CI_API_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories" | jq -r ".[0].id")'
     - 'echo "CONTAINER REGISTRY ID: $CONTAINER_REGISTRY_ID"'
     - 'echo "DELETING: $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG-test"'
