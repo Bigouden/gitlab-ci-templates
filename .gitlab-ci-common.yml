@@ -88,7 +88,7 @@ Pylint:
   image: $CONTAINER_CLIENT_IMAGE
   before_script:
     - apk add --no-cache --update git py3-pip
-    - pip install pylint
+    - pip install pylint typing-extensions
   dependencies: []
   script:
     - find . -type f -name "*.py" | xargs pylint 
