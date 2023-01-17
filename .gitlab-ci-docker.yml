@@ -67,7 +67,7 @@ Facts:
       dotenv: facts.env            
   rules:
     - exists:
-        - Dockerfile
+        - "**/Dockerfile"
 
 # CUSTOM BRANCH
 Dockerfile (custom_branch):
