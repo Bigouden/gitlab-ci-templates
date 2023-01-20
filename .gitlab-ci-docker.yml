@@ -39,6 +39,7 @@ variables:
   DOCKER_IMAGE_TAG:
     description : "Docker Image Tag"
     value: "daily"
+    
 include:
   - project: 'Bigouden/gitlab-ci-templates'
     file: '.gitlab-ci-common.yml'
