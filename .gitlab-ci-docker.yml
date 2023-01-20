@@ -28,7 +28,17 @@ variables:
   HADOLINT_IMAGE: hadolint/hadolint:latest-debian
   GIT_DEPTH: 1
   DOCKER_BUILDKIT: 1
-
+  CI_PIPELINE_SOURCE:
+    description: "Pipeline Source"
+    value: "schedule"
+    options:
+      - "schedule"
+      - "web"
+      - "manual"
+      - "webhook"
+  DOCKER_IMAGE_TAG:
+    description : "Docker Image Tag"
+    value: "daily"
 include:
   - project: 'Bigouden/gitlab-ci-templates'
     file: '.gitlab-ci-common.yml'
