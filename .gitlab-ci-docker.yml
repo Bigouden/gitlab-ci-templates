@@ -35,8 +35,8 @@ variables:
       - "web"
       - "manual"
       - "webhook"
-    DOCKER_IMAGE_TAG:
-      description : "Docker Image Tag"
+  DOCKER_IMAGE_TAG:
+    description : "Docker Image Tag"
       
 include:
   - project: 'Bigouden/gitlab-ci-templates'
