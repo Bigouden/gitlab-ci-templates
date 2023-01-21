@@ -30,11 +30,12 @@ variables:
   DOCKER_BUILDKIT: 1
   CI_PIPELINE_SOURCE:
     description: "Pipeline Source"
-    value: "$CI_PIPELINE_SOURCE"
+    value: "push"
     options:
       - "schedule"
       - "web"
       - "manual"
+      - "push"
       - "webhook"
   DOCKER_IMAGE_TAG:
     description : "Docker Image Tag"
