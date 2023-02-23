@@ -93,7 +93,7 @@ OSV Scanner:
     - export PATH="${PATH}:/"
   script:
     - LOCK_FILE=$(find . -name pip_packages)
-    - osv-scanner -r . --lockfile=requirements.txt:${LOCK_FILE}
+    - osv-scanner --lockfile=requirements.txt:${LOCK_FILE}
   rules:
     - exists:
         - "**/pip_packages"
