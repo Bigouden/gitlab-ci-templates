@@ -91,6 +91,8 @@ OSV Scanner:
     entrypoint: ['']
   script:
     - osv-scanner -r .
+  variables:
+    PATH: "${PATH}:/"
 
 Pylint:
   stage: Quality
