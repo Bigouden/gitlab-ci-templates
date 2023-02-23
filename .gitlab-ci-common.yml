@@ -89,10 +89,10 @@ OSV Scanner:
   image:
     name: $CONTAINER_OSV_SCANNER_IMAGE
     entrypoint: ['']
+  before_script:
+    - export PATH="${PATH}:/"
   script:
     - osv-scanner -r .
-  variables:
-    PATH: "${PATH}:/"
 
 Pylint:
   stage: Quality
