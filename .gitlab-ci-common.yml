@@ -6,6 +6,7 @@ variables:
   CONTAINER_ANSIBLE_LATER_IMAGE: thegeeklab/ansible-later:latest
   CONTAINER_KICS_IMAGE: checkmarx/kics:latest
   CONTAINER_TRIVY_IMAGE: aquasec/trivy:latest
+  CONTAINER_OSV_SCANNER_IMAGE: ghcr.io/google/osv-scanner:latest
   TRIVY_NO_PROGRESS: "true"
   TRIVY_INSECURE: "true"
   TRIVY_EXIT_CODE: "1"
@@ -81,6 +82,15 @@ Trivy Repository:
     - 'trivy repo --download-db-only'
   script:
     - trivy repo "$CI_REPOSITORY_URL"
+
+OSV Scanner:
+  stage: Security
+  needs: []
+  image:
+    name: $CONTAINER_OSV_SCANNER_IMAGE
+    entrypoint: ['']
+  script:
+    - osv-scanner -r .
 
 Pylint:
   stage: Quality
