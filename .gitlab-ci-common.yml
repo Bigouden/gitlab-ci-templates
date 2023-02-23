@@ -91,6 +91,7 @@ OSV Scanner:
     entrypoint: ['']
   before_script:
     - export PATH="${PATH}:/"
+  dependencies: []
   script:
     - LOCK_FILE=$(find . -name pip_packages)
     - osv-scanner --lockfile=requirements.txt:${LOCK_FILE}
