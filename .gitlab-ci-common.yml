@@ -19,8 +19,6 @@ Ansible Lint:
   image: 
     name: $CONTAINER_ANSIBLE_IMAGE
     entrypoint: ['']
-  before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - ansible-lint
   variables:
