@@ -37,13 +37,17 @@ Hadolint:
   stage: Quality
   image: $HADOLINT_IMAGE
   script:
-    - hadolint --ignore DL3013 --ignore DL3018 Dockerfile
+    - hadolint Dockerfile
   dependencies: []
   variables:
     CI_DEBUG_TRACE: "true"
   rules:
     - exists:
         - "**/Dockerfile"
+    - if: $HADOLINT_ALLOW_FAILURE
+      exists:
+        - "**/Dockerfile"
+      allow_failure: true
 
 Facts:
   stage: Build
