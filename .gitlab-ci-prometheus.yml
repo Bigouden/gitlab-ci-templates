@@ -2,6 +2,7 @@
   services:
     - name: $CONTAINER_TEST_IMAGE
       alias: exporter
+      command: $PROMETHEUS_EXPORTER_COMMAND
   image: $CONTAINER_CLIENT_IMAGE
   before_script:
     - apk add --no-cache --update curl
@@ -11,6 +12,7 @@
 
 variables:
   PROMETHEUS_EXPORTER_PORT: "8123"
+  PROMETHEUS_EXPORTER_COMMAND: [""]
 
 Prometheus Exporter:
   stage: Test
