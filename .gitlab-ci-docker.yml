@@ -42,10 +42,10 @@ Hadolint:
   variables:
     CI_DEBUG_TRACE: "true"
   rules:
+    - if: '$HADOLINT_ALLOW_FAILURE'
+      allow_failure: true
     - exists:
         - "**/Dockerfile"
-    - if: $HADOLINT_ALLOW_FAILURE
-      allow_failure: true
 
 Facts:
   stage: Build
