@@ -45,8 +45,6 @@ Hadolint:
     - exists:
         - "**/Dockerfile"
     - if: $HADOLINT_ALLOW_FAILURE
-      exists:
-        - "**/Dockerfile"
       allow_failure: true
 
 Facts:
