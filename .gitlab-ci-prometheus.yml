@@ -9,8 +9,11 @@
     GIT_STRATEGY: none
   dependencies: []
 
+variables:
+  PROMETHEUS_EXPORTER_PORT: "8123"
+
 Prometheus Exporter:
   stage: Test
   extends: .services
   script:
-    - curl --connect-timeout 60 http://exporter:8123/metrics
+    - curl -f --connect-timeout 60 http://exporter:${PROMETHEUS_EXPORTER_PORT}/metrics
