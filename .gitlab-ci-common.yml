@@ -50,7 +50,7 @@ Mega-Linter:
   stage: Quality
   image: $CONTAINER_MEGA_LINTER_IMAGE
   script: 
-    - true
+    - 'true'
   variables:
     DEFAULT_WORKSPACE: $CI_PROJECT_DIR
   artifacts:
