@@ -55,7 +55,6 @@ Ansible Later:
         - "**/hosts"
         - "**/.ansible-lint"
         - "**/.later.yml"
-        - "**/Dockerfile"
 
 Mega-Linter:
   stage: Quality
@@ -84,6 +83,7 @@ Kics:
         - "**/hosts"
         - "**/.ansible-lint"
         - "**/.later.yml"
+        - "**/Dockerfile"
 
 Trivy Configuration:
   stage: Security
