@@ -14,7 +14,7 @@ variables:
   CONTAINER_SEMGREP_IMAGE: returntocorp/semgrep:latest
   CONTAINER_ANSIBLE_IMAGE: $CI_REGISTRY/bigouden/alpine-ansible:daily
   CONTAINER_ANSIBLE_LATER_IMAGE: thegeeklab/ansible-later:latest
-  CONTAINER_MEGA_LINTER_IMAGE: oxsecurity/megalinter:v6
+  CONTAINER_MEGA_LINTER_IMAGE: oxsecurity/megalinter:v7
   CONTAINER_KICS_IMAGE: checkmarx/kics:latest
   CONTAINER_TRIVY_IMAGE: aquasec/trivy:latest
   CONTAINER_OSV_SCANNER_IMAGE: ghcr.io/google/osv-scanner:latest
