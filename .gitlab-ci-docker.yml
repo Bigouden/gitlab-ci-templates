@@ -282,6 +282,10 @@ Grype:
     GRYPE_REGISTRY_AUTH_AUTHORITY: "$CI_REGISTRY"
     GRYPE_REGISTRY_INSECURE_SKIP_TLS_VERIFY: "true"
     GIT_STRATEGY: none
+  rules:
+    - if: '$CI_PROJECT_NAME == "alpine-grype"'
+      when: never
+    - when: on_success
 
 Syft:
   stage: Inspect
@@ -304,6 +308,10 @@ Syft:
     SYFT_REGISTRY_AUTH_AUTHORITY: "$CI_REGISTRY"
     SYFT_REGISTRY_INSECURE_SKIP_TLS_VERIFY: "true"
     GIT_STRATEGY: none
+  rules:
+    - if: '$CI_PROJECT_NAME == "alpine-syft"'
+      when: never
+    - when: on_success
 
 Paranoia:
   stage: Inspect
