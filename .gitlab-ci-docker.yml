@@ -325,7 +325,7 @@ Paranoia:
     DOCKER_HOST: $DOCKER_HOST
     GIT_STRATEGY: none
   rules:
-    - if: $CI_PROJECT_NAME == "alpine-paranoia"'
+    - if: '$CI_PROJECT_NAME == "alpine-paranoia"'
       when: never
     - when: on_success
 
