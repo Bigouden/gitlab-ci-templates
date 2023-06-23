@@ -19,6 +19,7 @@ default:
 variables:
   ANCHORE_IMAGE: anchore/inline-scan:latest
   CONTAINER_GRYPE_IMAGE:  $CI_REGISTRY/bigouden/alpine-grype:daily
+  CONTAINER_PARANOIA_IMAGE: $CI_REGISTRY/bigouden/alpine-paranoia:daily
   CONTAINER_SYFT_IMAGE:  $CI_REGISTRY/bigouden/alpine-syft:daily
   CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME-test
   CONTAINER_TRIVY_IMAGE: aquasec/trivy:latest
@@ -302,6 +303,26 @@ Syft:
     SYFT_REGISTRY_AUTH_PASSWORD: "$CI_REGISTRY_PASSWORD"
     SYFT_REGISTRY_AUTH_AUTHORITY: "$CI_REGISTRY"
     SYFT_REGISTRY_INSECURE_SKIP_TLS_VERIFY: "true"
+    GIT_STRATEGY: none
+
+Paranoia:
+  stage: Inspect
+  needs:
+    - job: Dockerfile (custom_branch)
+      optional: true
+    - job: Dockerfile (default_branch)
+      optional: true
+    - job: Dockerfile (tag)
+      optional: true
+  image:
+    name: $CONTAINER_PARANOIA_IMAGE
+    entrypoint: ['']
+  before_script:
+    - 'docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - 'paranoia inspect "$CONTAINER_TEST_IMAGE"'
+  variables:
+    DOCKER_HOST: $DOCKER_HOST
     GIT_STRATEGY: none
 
 Gitlab:
