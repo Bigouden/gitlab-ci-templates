@@ -1,0 +1,18 @@
+variables:
+  CONTAINER_OWASP_ZAP_IMAGE: ghcr.io/zaproxy/zaproxy:stable
+
+.services:
+  services:
+    - name: $CONTAINER_TEST_IMAGE
+      alias: target
+  image: $CONTAINER_OWASP_ZAP_IMAGE
+  entrypoint: []
+  variables:
+    GIT_STRATEGY: none
+  dependencies: []
+
+OWASP ZAP:
+  stage: Inspect
+  extends: .services
+  script:
+    - zap-baseline.py -t ${OWASP_ZAP_TARGET}
