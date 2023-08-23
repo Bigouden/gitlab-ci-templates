@@ -5,8 +5,9 @@ variables:
   services:
     - name: $CONTAINER_TEST_IMAGE
       alias: target
-  image: $CONTAINER_OWASP_ZAP_IMAGE
-  entrypoint: []
+  image: 
+    name: $CONTAINER_OWASP_ZAP_IMAGE
+    entrypoint: [""]
   variables:
     GIT_STRATEGY: none
   dependencies: []
