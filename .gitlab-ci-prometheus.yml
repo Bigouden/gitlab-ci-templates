@@ -1,3 +1,7 @@
+include:
+  - project: 'Bigouden/gitlab-ci-templates'
+    file: '.gitlab-ci-owasp-zap.yml'
+
 .services:
   services:
     - name: $CONTAINER_TEST_IMAGE
@@ -11,6 +15,7 @@
 
 variables:
   PROMETHEUS_EXPORTER_PORT: "8123"
+  OWASP_ZAP_TARGET: http://target:${PROMETHEUS_EXPORTER_PORT}/metrics
 
 Prometheus Exporter:
   stage: Test
