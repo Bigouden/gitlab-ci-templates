@@ -12,7 +12,7 @@ variables:
     GIT_STRATEGY: none
   dependencies: []
 
-OWASP Zap:
+OWASP Zed Attack Proxy:
   stage: Inspect
   extends: .services_owasp_zap
   script:
