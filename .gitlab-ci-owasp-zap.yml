@@ -1,5 +1,6 @@
 variables:
   CONTAINER_OWASP_ZAP_IMAGE: ghcr.io/zaproxy/zaproxy:stable
+  OWASP_ZAP_CONFIG_URL: https://gitlab.com/api/v4/projects/48823179/repository/files/zap.conf/raw?ref=main
 
 .services_owasp_zap:
   services:
@@ -16,4 +17,4 @@ OWASP Zed Attack Proxy:
   stage: Inspect
   extends: .services_owasp_zap
   script:
-    - zap-baseline.py -t ${OWASP_ZAP_TARGET}
+    - zap-baseline.py -u ${OWASP_ZAP_CONFIG_URL} -t ${OWASP_ZAP_TARGET}
