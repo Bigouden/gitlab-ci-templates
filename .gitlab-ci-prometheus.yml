@@ -15,7 +15,7 @@ include:
 
 variables:
   PROMETHEUS_EXPORTER_PORT: "8123"
-  OWASP_ZAP_TARGET: http://target:${PROMETHEUS_EXPORTER_PORT}/metrics
+  OWASP_ZAP_TARGET: http://target:${PROMETHEUS_EXPORTER_PORT}
 
 Prometheus Exporter:
   stage: Test
