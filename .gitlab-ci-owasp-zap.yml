@@ -17,4 +17,4 @@ OWASP Zed Attack Proxy:
   stage: Inspect
   extends: .services_owasp_zap
   script:
-    - zap-baseline.py -u ${OWASP_ZAP_CONFIG_URL} -m 5 -T 10 -t ${OWASP_ZAP_TARGET}
+    - zap-baseline.py -u ${OWASP_ZAP_CONFIG_URL} -m 5 -T 10 -D 180 -d -t ${OWASP_ZAP_TARGET}
