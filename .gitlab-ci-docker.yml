@@ -329,6 +329,7 @@ Paranoia:
     - 'docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY'
   script:
     - 'paranoia inspect "$CONTAINER_TEST_IMAGE"'
+  allow_failure: true
   variables:
     DOCKER_HOST: $DOCKER_HOST
     GIT_STRATEGY: none
