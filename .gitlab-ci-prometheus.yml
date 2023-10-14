@@ -11,6 +11,7 @@ include:
     - apk add --no-cache --update curl
   variables:
     GIT_STRATEGY: none
+    DOCKER_HOST: $DOCKER_HOST
   dependencies: []
 
 variables:
