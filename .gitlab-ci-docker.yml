@@ -24,6 +24,7 @@ variables:
   CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME-test
   CONTAINER_TRIVY_IMAGE: aquasec/trivy:latest
   CONTAINER_VERSION_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  CONTAINER_XEOL_IMAGE: noqcks/xeol:latest
   DIVE_IMAGE: wagoodman/dive:latest
   DOCKER_IMAGE: docker:latest
   HADOLINT_IMAGE: hadolint/hadolint:latest-debian
@@ -256,6 +257,23 @@ Trivy Image:
     TRIVY_INSECURE: "true"
     TRIVY_EXIT_CODE: "1"
     TRIVY_SEVERITY: "CRITICAL"
+    GIT_STRATEGY: none
+
+Xeol:
+  stage: Inspect
+  needs:
+    - job: Dockerfile (custom_branch)
+      optional: true
+    - job: Dockerfile (default_branch)
+      optional: true
+    - job: Dockerfile (tag)
+      optional: true
+  image:
+    name: $CONTAINER_XEOL_IMAGE
+    entrypoint: ['']
+  script:
+    - '/xeol docker:"$CONTAINER_TEST_IMAGE" --fail-on-eol-found'
+  variables:
     GIT_STRATEGY: none
 
 Grype:
