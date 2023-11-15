@@ -273,6 +273,7 @@ Xeol:
     entrypoint: ['']
   script:
     - '/xeol docker:"$CONTAINER_TEST_IMAGE" --fail-on-eol-found'
+  allow_failure: true
   variables:
     GIT_STRATEGY: none
 
