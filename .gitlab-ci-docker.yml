@@ -30,6 +30,7 @@ variables:
   HADOLINT_IMAGE: hadolint/hadolint:latest-debian
   GIT_DEPTH: 1
   DOCKER_BUILDKIT: 1
+  CI_DEBUG_SERVICES: "true"
 
 include:
   - project: 'Bigouden/gitlab-ci-templates'
