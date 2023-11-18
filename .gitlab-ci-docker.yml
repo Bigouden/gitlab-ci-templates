@@ -152,7 +152,7 @@ Dockerfile (tag):
     - 'docker pull $CI_REGISTRY_IMAGE:$COMMIT_BRANCH_NAME || true'
     - 'docker build $DOCKER_BUILD_ARGS $DOCKER_CUSTOM_BUILD_ARGS --pull -t $CONTAINER_TEST_IMAGE .'
     - 'echo "PUSHING : $CONTAINER_TEST_IMAGE"'
-    - 'docker push $CONDTAINER_TEST_IMAGE'
+    - 'docker push $CONTAINER_TEST_IMAGE'
   retry: 2
   rules:
     - if: '$CI_COMMIT_TAG && $DOCKER_BUILD_NOCACHE == null'
