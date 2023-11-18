@@ -418,12 +418,6 @@ DockerHub:
 # CLEAN CUSTOM BRANCH
 Gitlab Container Registry (custom_branch):
   stage: Clean
-  needs:
-    - job: Gitlab
-    - job: DockerHub
-      optional: true
-    - job: Facts
-      optional: true
   image: $DOCKER_IMAGE
   before_script:
     - 'apk add --no-cache --update curl jq'
@@ -442,12 +436,6 @@ Gitlab Container Registry (custom_branch):
 # CLEAN DEFAULT BRANCH
 Gitlab Container Registry (default_branch):
   stage: Clean
-  needs:
-    - job: Gitlab
-    - job: DockerHub
-      optional: true
-    - job: Facts
-      optional: true
   image: $DOCKER_IMAGE
   before_script:
     - apk add --no-cache --update curl jq
@@ -469,12 +457,6 @@ Gitlab Container Registry (default_branch):
 # CLEAN TAG
 Gitlab Container Registry (tag):
   stage: Clean
-  needs:
-    - job: Gitlab
-    - job: DockerHub
-      optional: true
-    - job: Facts
-      optional: true
   image: $DOCKER_IMAGE
   before_script:
     - 'apk add --no-cache --update curl jq'
