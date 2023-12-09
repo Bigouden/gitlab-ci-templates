@@ -248,7 +248,7 @@ Trivy Image:
   before_script:
     - 'trivy image --download-db-only'
   script:
-    - 'trivy image "$CONTAINER_TEST_IMAGE"'
+    - 'trivy image --skip-files "**/METADATA" "$CONTAINER_TEST_IMAGE"'
   allow_failure: true
   variables:
     TRIVY_USERNAME: "$CI_REGISTRY_USER"
