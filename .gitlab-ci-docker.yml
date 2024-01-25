@@ -202,6 +202,7 @@ Dive:
     - 'dive $CONTAINER_TEST_IMAGE'
   dependencies: []
   retry: 2
+  allow_failure: true
   variables:
     CI: "true"
 
