@@ -246,10 +246,8 @@ Trivy Image:
   image:
     name: $CONTAINER_TRIVY_IMAGE
     entrypoint: ['']
-  before_script:
-    - 'trivy image --download-db-only'
   script:
-    - 'trivy image --skip-files "**/METADATA" "$CONTAINER_TEST_IMAGE"'
+    - 'trivy image --server "$TRIVY_SERVER_URL" --token "$TRIVY_SERVER_TOKEN" --skip-files "**/METADATA" "$CONTAINER_TEST_IMAGE"'
   allow_failure: true
   variables:
     TRIVY_USERNAME: "$CI_REGISTRY_USER"
@@ -259,6 +257,8 @@ Trivy Image:
     TRIVY_INSECURE: "true"
     TRIVY_EXIT_CODE: "1"
     TRIVY_SEVERITY: "CRITICAL"
+    TRIVY_SERVER_URL: "$TRIVY_SERVER_URL"
+    TRIVY_SERVER_TOKEN: "$TRIVY_SERVER_TOKEN"
     GIT_STRATEGY: none
 
 Xeol:
