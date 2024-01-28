@@ -109,7 +109,7 @@ Trivy Repository:
     name: $CONTAINER_TRIVY_IMAGE
     entrypoint: ['']
   script:
-    - trivy repo --server "$TRIVY_SERVER_URL" --token "$TRIVY_SERVER_TOKEN" "$CI_REPOSITORY_URL"
+    - trivy repository --server "$TRIVY_SERVER_URL" --token "$TRIVY_SERVER_TOKEN" "$CI_REPOSITORY_URL"
   variables:
     TRIVY_SERVER_URL: "$TRIVY_SERVER_URL"
     TRIVY_SERVER_TOKEN: "$TRIVY_SERVER_TOKEN"
