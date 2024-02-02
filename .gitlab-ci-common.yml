@@ -116,7 +116,7 @@ OWASP Dependency Check:
     paths:
       - dependency-check-report.html
     expire_in: 1 day
-  variable:
+  variables:
     NVD_API_KEY: $NVD_API_KEY
   rules:
     - exists:
