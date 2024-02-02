@@ -23,6 +23,7 @@ variables:
   CONTAINER_KICS_IMAGE: checkmarx/kics:latest
   CONTAINER_TRIVY_IMAGE: aquasec/trivy:latest
   CONTAINER_OSV_SCANNER_IMAGE: ghcr.io/google/osv-scanner:latest
+  CONTAINER_OWASP_DEPENDENCY_CHECK: owasp/dependency-check:latest
   TRIVY_NO_PROGRESS: "true"
   TRIVY_INSECURE: "true"
   TRIVY_EXIT_CODE: "1"
@@ -101,6 +102,25 @@ Trivy Configuration:
   rules:
     - exists:
         - "**/Dockerfile"
+
+OWASP Dependency Check:
+  stage: Security
+  needs: []
+  image:
+    name: $CONTAINER_OWASP_DEPENDENCY_CHECK
+    entrypoint: [""]
+  script:
+    - /usr/share/dependency-check/bin/dependency-check.sh --project $CI_PROJECT_NAME --out . --scan . --enableExperimental --failOnCVSS 7 -d /tmp/cache/owasp-dependency-check --nvdApiKey $NVD_API_KEY
+  artifacts:
+    when: always
+    paths:
+      - dependency-check-report.html
+    expire_in: 1 day
+  variable:
+    NVD_API_KEY: $NVD_API_KEY
+  rules:
+    - exists:
+        - "**/*.py"
 
 Trivy Repository:
   stage: Security
