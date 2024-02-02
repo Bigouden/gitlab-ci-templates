@@ -118,6 +118,7 @@ OWASP Dependency Check:
     expire_in: 1 day
   variables:
     NVD_API_KEY: $NVD_API_KEY
+    FF_DISABLE_UMASK_FOR_DOCKER_EXECUTOR: "true"
   rules:
     - exists:
         - "**/*.py"
