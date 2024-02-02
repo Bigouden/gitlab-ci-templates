@@ -110,7 +110,7 @@ OWASP Dependency Check:
     name: $CONTAINER_OWASP_DEPENDENCY_CHECK
     entrypoint: [""]
   script:
-    - /usr/share/dependency-check/bin/dependency-check.sh --project $CI_PROJECT_NAME --out . --scan . --enableExperimental --failOnCVSS 7 -d /tmp/cache/owasp-dependency-check --nvdApiKey $NVD_API_KEY
+    - /usr/share/dependency-check/bin/dependency-check.sh --project $CI_PROJECT_NAME --out . --scan . --enableExperimental --failOnCVSS 7 --nvdApiKey $NVD_API_KEY
   artifacts:
     when: always
     paths:
@@ -118,7 +118,6 @@ OWASP Dependency Check:
     expire_in: 1 day
   variables:
     NVD_API_KEY: $NVD_API_KEY
-    FF_DISABLE_UMASK_FOR_DOCKER_EXECUTOR: "true"
   rules:
     - exists:
         - "**/*.py"
