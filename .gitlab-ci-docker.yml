@@ -322,7 +322,7 @@ Syft:
     name: $CONTAINER_SYFT_IMAGE
     entrypoint: ['']
   script:
-    - 'syft packages --scope all-layers "$CONTAINER_TEST_IMAGE"'
+    - 'syft scan --scope all-layers "$CONTAINER_TEST_IMAGE"'
   allow_failure: true
   variables:
     SYFT_REGISTRY_AUTH_USERNAME: "$CI_REGISTRY_USER"
