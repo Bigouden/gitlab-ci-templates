@@ -110,7 +110,7 @@ OWASP Dependency Check:
     name: $CONTAINER_OWASP_DEPENDENCY_CHECK
     entrypoint: [""]
   script:
-    - /usr/share/dependency-check/bin/dependency-check.sh --project $CI_PROJECT_NAME --out . --scan . --enableExperimental --failOnCVSS 7 --nvdApiKey $NVD_API_KEY -d -d /tmp/cache/owasp-dependency-check
+    - /usr/share/dependency-check/bin/dependency-check.sh --project $CI_PROJECT_NAME --out . --scan . --enableExperimental --failOnCVSS 7 --nvdApiKey $NVD_API_KEY -d /tmp/cache/owasp-dependency-check
   artifacts:
     when: always
     paths:
