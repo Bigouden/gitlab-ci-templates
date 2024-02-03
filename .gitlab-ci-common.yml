@@ -109,6 +109,8 @@ OWASP Dependency Check:
   image:
     name: $CONTAINER_OWASP_DEPENDENCY_CHECK
     entrypoint: [""]
+  before_script:
+    - cp pip_packages requirements.txt
   script:
     - /usr/share/dependency-check/bin/dependency-check.sh --project $CI_PROJECT_NAME --out . --scan . --enableExperimental --failOnCVSS 7 --nvdApiKey $NVD_API_KEY -d /tmp/cache/owasp-dependency-check
   artifacts:
@@ -120,7 +122,7 @@ OWASP Dependency Check:
     NVD_API_KEY: $NVD_API_KEY
   rules:
     - exists:
-        - "**/*.py"
+        - "**/pip_packages"
 
 Trivy Repository:
   stage: Security
