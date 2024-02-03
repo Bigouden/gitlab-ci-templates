@@ -13,6 +13,8 @@ workflow:
 
 default:
   interruptible: true
+  after_script:
+    - 'wget --header "PRIVATE-TOKEN: $CI_API_TOKEN" https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/jobs/$CI_JOB_ID/trace -O $CI_PROJECT_NAME#$CI_JOB_STAGE#$CI_JOB_NAME.log'
   tags:
     - docker
 
@@ -121,9 +123,6 @@ Dockerfile (default_branch):
     - 'docker build $DOCKER_BUILD_ARGS $DOCKER_CUSTOM_BUILD_ARGS --pull -t $CONTAINER_TEST_IMAGE .'
     - 'echo "PUSHING : $CONTAINER_TEST_IMAGE"'
     - 'docker push $CONTAINER_TEST_IMAGE'
-  after_script:
-    - 'apk add curl'
-    - 'curl --location --header "PRIVATE-TOKEN: $CI_API_TOKEN" https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/jobs/$CI_JOB_ID/trace > /tmp/cache/gitlab/$CI_PROJECT_NAME#$CI_JOB_STAGE#$CI_JOB_NAME.log'
   retry: 2
   rules:
     - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $DOCKER_BUILD_NOCACHE == null'
