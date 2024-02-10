@@ -302,7 +302,7 @@ Grype:
     GRYPE_REGISTRY_AUTH_PASSWORD: "$CI_REGISTRY_PASSWORD"
     GRYPE_REGISTRY_AUTH_AUTHORITY: "$CI_REGISTRY"
     GRYPE_REGISTRY_INSECURE_SKIP_TLS_VERIFY: "true"
-    GRYPE_DB_CACHE_DIR: "/tmp/cache/grype/db"
+    GRYPE_DB_CACHE_DIR: "/cache/grype/db"
     GIT_STRATEGY: none
   rules:
     - if: '$CI_PROJECT_NAME == "alpine-grype"'
