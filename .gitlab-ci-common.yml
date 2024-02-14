@@ -198,6 +198,7 @@ Semgrep:
     - semgrep ci --config auto --force-color
 
 Download Gitlab Jobs Logs:
+  stage: .post
   trigger:
     project: Bigouden/download-gitlab-jobs-logs
   when: always
