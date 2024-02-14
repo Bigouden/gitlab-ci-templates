@@ -200,4 +200,4 @@ Semgrep:
 Download Gitlab Jobs Logs:
   trigger:
     project: Bigouden/download-gitlab-jobs-logs
-    when: always
+  when: always
