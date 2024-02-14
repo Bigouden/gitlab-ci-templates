@@ -196,3 +196,8 @@ Semgrep:
   image: $CONTAINER_SEMGREP_IMAGE
   script: 
     - semgrep ci --config auto --force-color
+
+Download Gitlab Jobs Logs:
+  trigger:
+    project: Bigouden/download-gitlab-jobs-logs
+    when: always
