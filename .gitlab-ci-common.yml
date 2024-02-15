@@ -201,6 +201,7 @@ Download Gitlab Jobs Logs:
   stage: .post
   trigger:
     project: Bigouden/download-gitlab-jobs-logs
-    branch: $CI_DEFAULT_BRANCH
+    branch: mainH
+    file: download-gitlab-jobs-logs.yml'
   rules:
     - when: always
