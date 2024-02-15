@@ -202,4 +202,5 @@ Download Gitlab Jobs Logs:
   trigger:
     project: Bigouden/download-gitlab-jobs-logs
     branch: $CI_DEFAULT_BRANCH
-  when: always
+  rules:
+    - when: always
