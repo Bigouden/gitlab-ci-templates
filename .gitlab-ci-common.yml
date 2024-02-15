@@ -203,7 +203,7 @@ Download Gitlab Jobs Logs:
     project: $CI_PROJECT_NAMESPACE/download-gitlab-jobs-logs
     branch: main
   variables:
-    CI_PROJECT_ID: $CI_PROJECT_ID
-    CI_PIPELINE_ID: $CI_PIPELINE_ID
+    UPSTREAM_CI_PROJECT_ID: $CI_PROJECT_ID
+    UPSTREAM_CI_PIPELINE_ID: $CI_PIPELINE_ID
   rules:
     - when: always
