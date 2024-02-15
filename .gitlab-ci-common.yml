@@ -202,7 +202,5 @@ Download Gitlab Jobs Logs:
   trigger:
     project: $CI_PROJECT_NAMESPACE/download-gitlab-jobs-logs
     branch: main
-  inherit:
-    variables: false
   rules:
     - when: always
