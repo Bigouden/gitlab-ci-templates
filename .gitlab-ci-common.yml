@@ -204,5 +204,4 @@ Download Gitlab Jobs Logs:
       - project: Bigouden/download-gitlab-jobs-logs
         ref: main
         file: 'download-gitlab-jobs-logs.yml'
-  rules:
-    - when: always
+  when: always
