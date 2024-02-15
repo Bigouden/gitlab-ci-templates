@@ -200,8 +200,9 @@ Semgrep:
 Download Gitlab Jobs Logs:
   stage: .post
   trigger:
-    project: Bigouden/download-gitlab-jobs-logs
-    branch: main
-    file: 'download-gitlab-jobs-logs.yml'
+    include:
+      - project: Bigouden/download-gitlab-jobs-logs
+        branch: main
+        file: 'download-gitlab-jobs-logs.yml'
   rules:
     - when: always
