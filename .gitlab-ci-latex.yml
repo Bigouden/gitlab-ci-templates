@@ -8,6 +8,10 @@ variables:
   CONTAINER_LATEX_IMAGE: $CI_REGISTRY/bigouden/alpine-latex:daily
   CONTAINER_SMTP_IMAGE: alpine:latest
 
+include:
+  - project: 'Bigouden/gitlab-ci-templates'
+    file: '.gitlab-ci-common.yml'
+
 Compile:
   stage: Build
   image:
