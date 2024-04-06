@@ -31,10 +31,10 @@ Send Email:
   image: $CONTAINER_SMTP_IMAGE
   before_script:
     - echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
-    - apk add --upgrade swaks perl-net-ssleay
+    - apk add --upgrade swaks perl-net-ssleay findutils
     - cd $LATEX_FILES_DIRECTORY || true
   script:
-    - swaks --server $SMTP_SERVER --port $SMTP_PORT --tlsc -hs --auth-user $SMTP_USERNAME --auth-password $SMTP_PASSWORD --from "$MAIL_FROM" --to "$MAIL_TO" -h-Subject "$MAIL_SUBJECT" --body "$MAIL_BODY" --attach-type application/pdf `find . -type f -name '*.pdf' -exec echo -n '--attach "{}" ' \;)'`
+    - swaks --server $SMTP_SERVER --port $SMTP_PORT --tlsc -hs --auth-user $SMTP_USERNAME --auth-password $SMTP_PASSWORD --from "$MAIL_FROM" --to "$MAIL_TO" -h-Subject "$MAIL_SUBJECT" --body "$MAIL_BODY" `find . -type f -name '*.pdf' -printf '--attach-type "application/pdf" --attach "%f" --attach-name "%f" '`
   variables:
     GIT_STRATEGY: none
   rules:
