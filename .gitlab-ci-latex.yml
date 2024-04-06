@@ -21,6 +21,7 @@ Compile:
     - cd $LATEX_FILES_DIRECTORY || true
   script:
     - latexmk -pdf *.tex
+  dependencies: []
   artifacts:
     paths:
       - "$LATEX_FILES_DIRECTORY/*.pdf"
