@@ -7,6 +7,7 @@ workflow:
 variables:
   CONTAINER_LATEX_IMAGE: $CI_REGISTRY/bigouden/alpine-latex:daily
   CONTAINER_SMTP_IMAGE: alpine:latest
+  LATEX_FILES_DIRECTORY: $CI_PROJECT_DIR
 
 include:
   - project: 'Bigouden/gitlab-ci-templates'
