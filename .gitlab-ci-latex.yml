@@ -18,12 +18,12 @@ Compile:
     name: $CONTAINER_LATEX_IMAGE
     entrypoint: [""]
   before_script:
-    - cd $CI_PROJECT_DIR/$LATEX_FILES_DIRECTORY
+    - cd $LATEX_FILES_DIRECTORY
   script:
     - latexmk -pdf *.tex
   artifacts:
     paths:
-      - "*.pdf"
+      - "$LATEX_FILES_DIRECTORY/*.pdf"
   when: always
 
 Send Email:
