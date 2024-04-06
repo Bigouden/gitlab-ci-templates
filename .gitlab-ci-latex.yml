@@ -23,7 +23,7 @@ Compile:
     - latexmk -pdf *.tex
   artifacts:
     paths:
-      - *.pdf
+      - "*.pdf"
   when: always
 
 Send Email:
