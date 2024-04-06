@@ -34,8 +34,9 @@ Send Email:
     - apk add --upgrade swaks perl-net-ssleay findutils
     - cd $LATEX_FILES_DIRECTORY || true
   script:
-    - find . -type f -name '*.pdf' -printf '--attach-type "application/pdf" --attach "%f" --attach-name "%f" '
-    - swaks --server $SMTP_SERVER --port $SMTP_PORT --tlsc -hs --auth-user $SMTP_USERNAME --auth-password $SMTP_PASSWORD --from "$MAIL_FROM" --to "$MAIL_TO" -h-Subject "$MAIL_SUBJECT" --body "$MAIL_BODY" `find . -type f -name '*.pdf' -printf '--attach-type "application/pdf" --attach "%f" --attach-name "%f" '`
+    - swaks --server $SMTP_SERVER --port $SMTP_PORT --tlsc -hs --auth-user $SMTP_USERNAME --auth-password $SMTP_PASSWORD --from "$MAIL_FROM" --to "$MAIL_TO" -h-Subject "$MAIL_SUBJECT" --body "$MAIL_BODY" `find . -type f -name '*.pdf' -printf '--attach-type "application/pdf" --attach "@%f" --attach-name "%f" '`
+  dependencies:
+    - Compile
   variables:
     GIT_STRATEGY: none
   rules:
