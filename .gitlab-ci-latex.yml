@@ -18,7 +18,7 @@ Compile:
     name: $CONTAINER_LATEX_IMAGE
     entrypoint: [""]
   before_script:
-    - cd $LATEX_FILES_DIRECTORY
+    - cd $LATEX_FILES_DIRECTORY || true
   script:
     - latexmk -pdf *.tex
   artifacts:
@@ -32,8 +32,9 @@ Send Email:
   before_script:
     - echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
     - apk add --upgrade swaks perl-net-ssleay
+    - cd $LATEX_FILES_DIRECTORY || true
   script:
-    - swaks --server $SMTP_SERVER --port $SMTP_PORT --tlsc -hs --auth-user $SMTP_USERNAME --auth-password $SMTP_PASSWORD --from "$MAIL_FROM" --to "$MAIL_TO" -h-Subject "$MAIL_SUBJECT" --body "$MAIL_BODY" --attach-name $FILENAME.pdf --attach @$FILENAME.pdf
+    - swaks --server $SMTP_SERVER --port $SMTP_PORT --tlsc -hs --auth-user $SMTP_USERNAME --auth-password $SMTP_PASSWORD --from "$MAIL_FROM" --to "$MAIL_TO" -h-Subject "$MAIL_SUBJECT" --body "$MAIL_BODY" --attach "$(ls *.pdf | tr '\n' ',')"
   variables:
     GIT_STRATEGY: none
   rules:
