@@ -24,6 +24,7 @@ variables:
   CONTAINER_TRIVY_IMAGE: aquasec/trivy:latest
   CONTAINER_OSV_SCANNER_IMAGE: ghcr.io/google/osv-scanner:latest
   CONTAINER_OWASP_DEPENDENCY_CHECK: owasp/dependency-check:latest
+  CONTAINER_SONAR_SCANNER: sonarsource/sonar-scanner-cli:latest
   TRIVY_NO_PROGRESS: "true"
   TRIVY_INSECURE: "true"
   TRIVY_EXIT_CODE: "1"
@@ -74,6 +75,16 @@ Mega-Linter:
     paths:
       - megalinter-reports
     expire_in: 1 day
+
+Sonarqube:
+  stage: Quality
+  image: 
+    name: $CONTAINER_SONAR_SCANNER
+    entrypoint: ['']
+  script:
+    - sonar-scanner -D sonar.projectKey=$CI_PROJECT_NAME -D sonar.qualitygate.wait=true
+  variables:
+    GIT_DEPTH: "0"
 
 Kics:
   stage: Security
