@@ -81,14 +81,10 @@ Sonarqube:
   image: 
     name: $CONTAINER_SONAR_SCANNER
     entrypoint: ['']
-  cache:
-    key: "${CI_JOB_NAME}"
-    paths:
-      - .sonar/cache
   script:
     - sonar-scanner -D sonar.projectKey=$CI_PROJECT_NAME -D sonar.qualitygate.wait=true
   variables:
-    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+    SONAR_USER_HOME: "/cache/sonarqube"
     GIT_DEPTH: "0"
 
 Kics:
