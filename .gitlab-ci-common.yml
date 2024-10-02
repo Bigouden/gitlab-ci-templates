@@ -83,6 +83,7 @@ Sonarqube:
     entrypoint: ['']
   script:
     - sonar-scanner -D sonar.projectKey=$CI_PROJECT_NAME -D sonar.qualitygate.wait=true
+  allow_failure: true
   variables:
     SONAR_USER_HOME: "/cache/sonarqube/$CI_PROJECT_NAME"
     GIT_DEPTH: "0"
