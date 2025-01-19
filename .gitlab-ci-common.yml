@@ -22,7 +22,7 @@ variables:
   CONTAINER_MEGA_LINTER_IMAGE: oxsecurity/megalinter:v8
   CONTAINER_KICS_IMAGE: checkmarx/kics:latest
   CONTAINER_TRIVY_IMAGE: aquasec/trivy:latest
-  CONTAINER_OSV_SCANNER_IMAGE: ghcr.io/google/osv-scanner:latest
+  CONTAINER_OSV_SCANNER_IMAGE: ghcr.io/google/osv-scanner:v1.9.1
   CONTAINER_OWASP_DEPENDENCY_CHECK: owasp/dependency-check:latest
   CONTAINER_SONAR_SCANNER: sonarsource/sonar-scanner-cli:latest
   TRIVY_NO_PROGRESS: "true"
