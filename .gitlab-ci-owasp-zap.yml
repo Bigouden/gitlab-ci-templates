@@ -1,6 +1,7 @@
 variables:
   CONTAINER_OWASP_ZAP_IMAGE: ghcr.io/zaproxy/zaproxy:stable
   OWASP_ZAP_CONFIG_URL: https://gitlab.com/api/v4/projects/48823179/repository/files/zap.conf/raw?ref=main
+  OWASP_ZAP_REPORT: zap_report.html
 
 .services_owasp_zap:
   services:
@@ -16,5 +17,12 @@ variables:
 OWASP Zed Attack Proxy:
   stage: Inspect
   extends: .services_owasp_zap
+  before_script:
+    -  ln  -s  $CI_PROJECT_DIR  /zap/wrk 
   script:
-    - zap-baseline.py -u ${OWASP_ZAP_CONFIG_URL} -D 30 -d -t ${OWASP_ZAP_TARGET}
+    - zap-baseline.py -u ${OWASP_ZAP_CONFIG_URL} -D 30 -d -t ${OWASP_ZAP_TARGET} -r ${OWASP_ZAP_REPORT}
+  artifacts:
+    when:  always
+    paths:
+      -  ${OWASP_ZAP_REPORT}
+    expire_in:  1  week 
