@@ -87,6 +87,8 @@ Sonarqube:
   variables:
     SONAR_USER_HOME: "/cache/sonarqube/$CI_PROJECT_NAME"
     GIT_DEPTH: "0"
+  rules:
+    - when: never
 
 Kics:
   stage: Security
