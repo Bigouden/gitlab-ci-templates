@@ -150,8 +150,8 @@ Trivy Repository:
   variables:
     TRIVY_SERVER_URL: "$TRIVY_SERVER_URL"
     TRIVY_SERVER_TOKEN: "$TRIVY_SERVER_TOKEN"
-  when:
-    - never
+  rules:
+    - when: never
 
 OSV Scanner:
   stage: Security
